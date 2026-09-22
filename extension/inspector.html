@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WebMCP Inspector</title>
+    <link rel="stylesheet" href="panel.css" />
+    <link rel="stylesheet" href="inspector.css" />
+  </head>
+  <body class="inspector">
+    <header class="inspector-head">
+      <div class="inspector-title">
+        <h1 data-i18n="inspectorTitle">WebMCP Inspector</h1>
+        <p id="pageInfo"></p>
+      </div>
+      <button
+        id="reinspect"
+        class="secondary"
+        data-i18n="inspectorRefresh"
+      ></button>
+    </header>
+    <main>
+      <p id="emptyState" class="hint" hidden></p>
+      <section id="diagnosis">
+        <h2 data-i18n="sectionDiagnosis"></h2>
+        <ul id="checks" class="checks"></ul>
+      </section>
+      <section id="toolsSection">
+        <h2 id="toolsHeading"></h2>
+        <div id="toolCards" class="inspect-tools"></div>
+      </section>
+      <section id="callSection">
+        <h2 data-i18n="sectionCall"></h2>
+        <p id="callEmpty" class="hint" data-i18n="callNoTools" hidden></p>
+        <div id="callForm">
+          <label for="callTool" data-i18n="toolLabel"></label>
+          <select id="callTool"></select>
+          <label for="callArgs" data-i18n="argsLabel"></label>
+          <textarea id="callArgs" rows="8" spellcheck="false"></textarea>
+          <div id="callNotes" class="call-notes" role="alert"></div>
+          <div class="dialog-actions">
+            <button
+              id="resetArgs"
+              type="button"
+              class="secondary"
+              data-i18n="resetArgs"
+            ></button>
+            <button
+              id="callButton"
+              type="button"
+              class="primary"
+              data-i18n="callTool"
+            ></button>
+          </div>
+          <p id="callStatus" class="call-status" role="status"></p>
+          <pre id="callResult" hidden></pre>
+        </div>
+      </section>
+      <section id="eventsSection">
+        <h2 data-i18n="sectionEvents"></h2>
+        <ol id="events" class="events"></ol>
+      </section>
+    </main>
+    <footer class="inspector-foot">
+      <button id="copyReport" class="secondary" data-i18n="copyReport"></button>
+      <button id="copyTools" class="secondary" data-i18n="copyTools"></button>
+      <button id="copyCalls" class="secondary" data-i18n="copyCalls"></button>
+    </footer>
+    <script type="module" src="inspector.js"></script>
+  </body>
+</html>

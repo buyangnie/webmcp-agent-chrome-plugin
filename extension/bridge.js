@@ -25,6 +25,23 @@ export async function pageBridge(action, payload = {}) {
     const mc = document.modelContext;
     const legacy = navigator.modelContextTesting;
     const api = mc && typeof mc.getTools === "function" ? mc : legacy;
+    const mode = !api
+      ? "none"
+      : api === mc
+        ? "document.modelContext"
+        : "navigator.modelContextTesting";
+    const env = action === "inspect" && {
+      title: document.title,
+      url: location.href,
+      secure: isSecureContext,
+      originAgentCluster: window.originAgentCluster ?? null,
+      readyState: document.readyState,
+      frames: document.querySelectorAll("iframe, frame").length,
+      hasModelContext: Boolean(mc),
+      hasGetTools: typeof mc?.getTools === "function",
+      hasTesting: Boolean(legacy),
+    };
+    if (action === "inspect" && !api) return { ok: true, env, mode, tools: [] };
     if (!api) {
       if (action === "discover")
         return {
@@ -49,6 +66,14 @@ export async function pageBridge(action, payload = {}) {
     try {
       list = api.getTools ? await api.getTools() : await api.listTools();
     } catch (e) {
+      if (action === "inspect")
+        return {
+          ok: true,
+          env,
+          mode,
+          tools: [],
+          toolsError: e.message || String(e),
+        };
       if (action !== "discover") throw e;
       return {
         ok: true,
@@ -68,16 +93,39 @@ export async function pageBridge(action, payload = {}) {
       annotations: t.annotations || {},
       origin: t.origin || location.origin,
     });
+    if (action === "inspect")
+      return {
+        ok: true,
+        env,
+        mode,
+        tools: list.map((t) => {
+          try {
+            return clean(t);
+          } catch (e) {
+            return {
+              name: t.name,
+              description: t.description || "",
+              inputSchema: t.inputSchema,
+              annotations: t.annotations || {},
+              origin: t.origin || location.origin,
+              schemaError: e.message || String(e),
+            };
+          }
+        }),
+      };
     if (action === "discover")
       return {
         ok: true,
         title: document.title,
         url: location.href,
-        mode:
-          api === mc
-            ? "document.modelContext"
-            : "navigator.modelContextTesting",
-        tools: list.map(clean),
+        mode,
+        tools: list.flatMap((t) => {
+          try {
+            return [clean(t)];
+          } catch {
+            return [];
+          }
+        }),
       };
     const tool = list.find(
       (t) =>
@@ -163,12 +211,12 @@ function relayToolChanges() {
       chrome.runtime.sendMessage({ type: "toolchange" }).catch(() => {});
   });
 }
-export async function discover(tabId) {
+export async function discover(tabId, action = "discover") {
   const [r] = await chrome.scripting.executeScript({
     target: { tabId },
     world: "MAIN",
     func: pageBridge,
-    args: ["discover"],
+    args: [action],
   });
   if (!r?.result?.ok)
     throw Error(r?.result?.error || "Could not discover page tools");

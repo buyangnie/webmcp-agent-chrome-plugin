@@ -1204,13 +1204,56 @@ function renderSuggestions() {
 
 let editingSkill = null;
 function selectTab(tab) {
-  const skillsTab = tab === "skills";
-  $("tabModel").setAttribute("aria-selected", String(!skillsTab));
-  $("tabSkills").setAttribute("aria-selected", String(skillsTab));
-  $("configForm").hidden = skillsTab;
-  $("paneSkills").hidden = !skillsTab;
-  if (skillsTab) showSkillList();
+  const panes = {
+    model: ["tabModel", "configForm"],
+    skills: ["tabSkills", "paneSkills"],
+    developer: ["tabDeveloper", "paneDeveloper"],
+  };
+  for (const [name, [tabId, paneId]] of Object.entries(panes)) {
+    $(tabId).setAttribute("aria-selected", String(name === tab));
+    $(paneId).hidden = name !== tab;
+  }
+  if (tab === "skills") showSkillList();
 }
+let inspectorEnabled = Boolean(
+  (await chrome.storage.local.get("inspector")).inspector,
+);
+function applyInspector() {
+  $("inspectorEnabled").checked = inspectorEnabled;
+  $("inspect").hidden = !inspectorEnabled;
+}
+async function openInspector() {
+  const url = `inspector.html?window=${targetWindowId}`;
+  const { inspectorWindow } =
+    await chrome.storage.session.get("inspectorWindow");
+  if (inspectorWindow) {
+    const [tab] = await chrome.tabs
+      .query({ windowId: inspectorWindow })
+      .catch(() => []);
+    if (tab) {
+      await chrome.tabs.update(tab.id, { url });
+      await chrome.windows.update(inspectorWindow, { focused: true });
+      return;
+    }
+  }
+  const win = await chrome.windows.create({
+    url,
+    type: "popup",
+    width: 760,
+    height: 860,
+    focused: true,
+  });
+  await chrome.storage.session.set({ inspectorWindow: win.id });
+}
+$("tabDeveloper").onclick = () => selectTab("developer");
+$("inspectorEnabled").onchange = async () => {
+  inspectorEnabled = $("inspectorEnabled").checked;
+  await chrome.storage.local.set({ inspector: inspectorEnabled });
+  applyInspector();
+};
+$("openInspector").onclick = openInspector;
+$("inspect").onclick = openInspector;
+applyInspector();
 function showSkillList(note = "") {
   editingSkill = null;
   $("skillEditor").hidden = true;
@@ -1351,6 +1394,10 @@ $("skillFile").onchange = async () => {
   showSkillList(notes.join(" "));
 };
 chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes.inspector) {
+    inspectorEnabled = Boolean(changes.inspector.newValue);
+    applyInspector();
+  }
   if (area !== "local" || !changes.skills) return;
   skills = changes.skills.newValue || [];
   if (!skills.some((s) => s.id === selectedSkill)) selectedSkill = null;

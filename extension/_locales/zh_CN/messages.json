@@ -388,5 +388,284 @@
   },
   "builtinTableBody": {
     "message": "把当前页面的结构化数据提取成 Markdown 表格。\n- 找出页面上主要的重复条目，例如列表行、表格行或卡片，并起清楚的列名。\n- 如果用户指定了字段，就只用这些列。\n- 数值与页面完全一致，缺失的值留空，不要编造数据。\n- 表格之后用一句话说明找到了多少行，以及有没有遗漏的内容。\n- 列名和说明用中文。"
+  },
+  "tabDeveloper": {
+    "message": "开发者"
+  },
+  "inspectorEnable": {
+    "message": "启用 WebMCP 检查器"
+  },
+  "inspectorEnableHint": {
+    "message": "在工具列表中增加“检查”按钮。可以查看页面为什么没有工具、检查工具定义，并且不经过模型直接调用工具。"
+  },
+  "openInspector": {
+    "message": "打开检查器"
+  },
+  "inspect": {
+    "message": "检查"
+  },
+  "inspectorTitle": {
+    "message": "WebMCP 检查器"
+  },
+  "inspectorNoPage": {
+    "message": "没有可检查的页面，请在浏览器窗口中切换到一个标签页。"
+  },
+  "inspectorWindowClosed": {
+    "message": "检查器跟随的浏览器窗口已关闭。"
+  },
+  "inspectorRefresh": {
+    "message": "重新检查"
+  },
+  "sectionDiagnosis": {
+    "message": "诊断"
+  },
+  "sectionTools": {
+    "message": "工具（{0}）"
+  },
+  "sectionCall": {
+    "message": "调用工具"
+  },
+  "sectionEvents": {
+    "message": "事件"
+  },
+  "copyReport": {
+    "message": "复制诊断报告"
+  },
+  "copyTools": {
+    "message": "复制工具定义"
+  },
+  "copyCalls": {
+    "message": "复制调用记录"
+  },
+  "badgeReadOnly": {
+    "message": "只读"
+  },
+  "badgeApproval": {
+    "message": "需要批准"
+  },
+  "issuesCount": {
+    "message": "{0} 个问题"
+  },
+  "noIssues": {
+    "message": "没有问题"
+  },
+  "showSchema": {
+    "message": "参数定义"
+  },
+  "noSchema": {
+    "message": "此工具不需要参数。"
+  },
+  "tryTool": {
+    "message": "试用"
+  },
+  "toolLabel": {
+    "message": "工具"
+  },
+  "argsLabel": {
+    "message": "参数（JSON）"
+  },
+  "resetArgs": {
+    "message": "恢复模板"
+  },
+  "callTool": {
+    "message": "调用"
+  },
+  "callAnyway": {
+    "message": "仍然调用"
+  },
+  "stopCall": {
+    "message": "停止"
+  },
+  "callConfirm": {
+    "message": "此工具可能修改页面上的数据。确定要调用吗？"
+  },
+  "argsNotJson": {
+    "message": "参数必须是 JSON 对象：{0}"
+  },
+  "argsInvalid": {
+    "message": "参数与工具的参数定义不符。你仍然可以调用，以测试页面如何处理。"
+  },
+  "callSucceeded": {
+    "message": "成功，用时 {0} 毫秒"
+  },
+  "callFailed": {
+    "message": "失败，用时 {0} 毫秒"
+  },
+  "callNoTools": {
+    "message": "此页面没有可调用的工具。"
+  },
+  "eventsEmpty": {
+    "message": "暂无事件。"
+  },
+  "eventInspected": {
+    "message": "已检查 {0}：{1} 个工具"
+  },
+  "eventToolChange": {
+    "message": "页面报告工具已变化"
+  },
+  "eventCall": {
+    "message": "调用 {0}：{1}"
+  },
+  "eventOk": {
+    "message": "成功"
+  },
+  "eventError": {
+    "message": "失败"
+  },
+  "diagPageBlocked": {
+    "message": "Chrome 不允许扩展读取此页面"
+  },
+  "diagPageBlockedDetail": {
+    "message": "内部页面（chrome://）、应用商店和其他扩展的页面无法检查。file:// 页面需要在本扩展的详情中开启“允许访问文件网址”。"
+  },
+  "diagPageReadable": {
+    "message": "扩展可以读取此页面"
+  },
+  "diagPageReadableDetail": {
+    "message": "可以在页面主环境中运行脚本。"
+  },
+  "diagSecure": {
+    "message": "页面是安全上下文"
+  },
+  "diagSecureDetail": {
+    "message": "通过 HTTPS 或 localhost 提供。"
+  },
+  "diagInsecure": {
+    "message": "页面不是安全上下文"
+  },
+  "diagInsecureDetail": {
+    "message": "WebMCP 需要 HTTPS 或 localhost。isSecureContext 为 false。"
+  },
+  "diagApi": {
+    "message": "WebMCP 可用"
+  },
+  "diagApiDetail": {
+    "message": "发现 document.modelContext.getTools()。"
+  },
+  "diagApiLegacy": {
+    "message": "只有旧版测试接口可用"
+  },
+  "diagApiLegacyDetail": {
+    "message": "发现 navigator.modelContextTesting，但没有 document.modelContext。工具可以使用，但页面或浏览器用的是旧版 WebMCP。"
+  },
+  "diagApiPartial": {
+    "message": "WebMCP 只部分可用"
+  },
+  "diagApiPartialDetail": {
+    "message": "document.modelContext 存在，但没有 getTools()。浏览器的 WebMCP 版本可能与本扩展支持的不一致。"
+  },
+  "diagApiMissing": {
+    "message": "此页面未启用 WebMCP"
+  },
+  "diagApiMissingDetail": {
+    "message": "document.modelContext 和 navigator.modelContextTesting 都不存在。请检查 Chrome 版本和 chrome://flags 中的 WebMCP 开关。如果都没问题，说明页面本身没有使用 WebMCP。"
+  },
+  "diagIsolation": {
+    "message": "页面未启用源隔离"
+  },
+  "diagIsolationDetail": {
+    "message": "window.originAgentCluster 为 false。部分 Chrome 环境只对启用源隔离的页面提供 WebMCP。请让页面返回响应头 Origin-Agent-Cluster: ?1。"
+  },
+  "diagToolsError": {
+    "message": "页面列出工具时出错"
+  },
+  "diagToolsErrorDetail": {
+    "message": "getTools() 抛出错误：{0}"
+  },
+  "diagTools": {
+    "message": "页面注册了 {0} 个工具"
+  },
+  "diagToolsDetail": {
+    "message": "详情和检查结果见下方。"
+  },
+  "diagToolsNone": {
+    "message": "页面还没有注册任何工具"
+  },
+  "diagToolsNoneDetail": {
+    "message": "WebMCP 可用，但 getTools() 返回了空列表。页面可能稍后、登录后或在其他路由上才注册工具。"
+  },
+  "diagLoading": {
+    "message": "页面仍在加载"
+  },
+  "diagLoadingDetail": {
+    "message": "document.readyState 尚未完成，加载完后请重新检查。"
+  },
+  "diagFrames": {
+    "message": "页面包含 {0} 个框架"
+  },
+  "diagFramesDetail": {
+    "message": "只检查顶层文档。iframe 中注册的工具不会被发现。"
+  },
+  "lintNameMissing": {
+    "message": "工具没有名称。"
+  },
+  "lintNameRenamed": {
+    "message": "名称含有模型不接受的字符，模型看到的名称是 {0}。"
+  },
+  "lintNameDuplicate": {
+    "message": "有其他工具使用了相同的名称。"
+  },
+  "lintDescriptionMissing": {
+    "message": "没有描述。模型根据描述判断何时使用工具。"
+  },
+  "lintDescriptionLong": {
+    "message": "描述有 {0} 个字符，每条消息都会发送它，建议少于 1000 字。"
+  },
+  "lintSchemaUnparsable": {
+    "message": "参数定义不是合法的 JSON（{0}）。对话中会跳过此工具。"
+  },
+  "lintSchemaNotObject": {
+    "message": "参数定义必须是 JSON 对象。"
+  },
+  "lintSchemaType": {
+    "message": "参数定义的 type 是 \"{0}\"，必须是 \"object\"。"
+  },
+  "lintPropertiesInvalid": {
+    "message": "properties 必须是对象。"
+  },
+  "lintRequiredInvalid": {
+    "message": "required 必须是参数名数组。"
+  },
+  "lintRequiredUnknown": {
+    "message": "required 中的 \"{0}\" 不在 properties 里。"
+  },
+  "lintParamInvalid": {
+    "message": "参数 \"{0}\" 不是合法的定义对象。"
+  },
+  "lintParamType": {
+    "message": "参数 \"{0}\" 的类型 \"{1}\" 无效。"
+  },
+  "lintEnumEmpty": {
+    "message": "参数 \"{0}\" 的 enum 为空，任何值都不合法。"
+  },
+  "lintParamUndocumented": {
+    "message": "以下参数缺少说明：{0}。"
+  },
+  "lintNeedsApproval": {
+    "message": "未标记为只读，因此每次调用都会请求用户批准。"
+  },
+  "argType": {
+    "message": "{0}：应为 {1}，实际是 {2}。"
+  },
+  "argEnum": {
+    "message": "{0}：必须是 {1} 之一。"
+  },
+  "argMinimum": {
+    "message": "{0}：不能小于 {1}。"
+  },
+  "argMaximum": {
+    "message": "{0}：不能大于 {1}。"
+  },
+  "argMinLength": {
+    "message": "{0}：至少 {1} 个字符。"
+  },
+  "argMaxLength": {
+    "message": "{0}：最多 {1} 个字符。"
+  },
+  "argRequired": {
+    "message": "{0}：必填。"
+  },
+  "argUnknown": {
+    "message": "{0}：不是允许的参数。"
   }
 }

@@ -289,9 +289,72 @@ try {
   await panel.locator("#prompt").fill("");
   assert.ok(await panel.locator("#modelLabel").isHidden());
 
+  assert.equal(await panel.locator("#inspect[hidden]").count(), 1);
+  await panel.locator("#settings").click();
+  await panel.locator("#tabDeveloper").click();
+  await panel.locator("#inspectorEnabled").check();
+  await panel.keyboard.press("Escape");
+  await sw.evaluate((id) => chrome.tabs.update(id, { active: true }), demoId);
+  await toolCount("3 tools");
+  await panel.locator("#toolsButton").click();
+  const opened = context.waitForEvent("page");
+  await panel.locator("#inspect").click();
+  const inspector = await opened;
+  inspector.on("pageerror", (e) => errors.push("inspector: " + e.message));
+  await inspector.locator(".inspect-tool").nth(2).waitFor();
+  assert.equal(await inspector.locator(".inspect-tool").count(), 3);
+  assert.equal(await inspector.locator(".checks .level-error").count(), 0);
+  assert.match(
+    await inspector.locator(".checks").innerText(),
+    /WebMCP is available/,
+  );
+  assert.match(
+    await inspector
+      .locator(".inspect-tool", { hasText: "update_ticket_status" })
+      .innerText(),
+    /Needs approval/,
+  );
+  await inspector.locator("#callTool").selectOption("get_ticket_detail");
+  await inspector.locator("#callArgs").fill("{}");
+  await inspector.locator("#callButton").click();
+  assert.match(
+    await inspector.locator("#callNotes").innerText(),
+    /don't match/,
+  );
+  await inspector.locator("#callArgs").fill('{"ticketId":"INC-2026-0431"}');
+  await inspector.locator("#callButton").click();
+  await inspector.waitForFunction(() =>
+    document.getElementById("callStatus").textContent.startsWith("Succeeded"),
+  );
+  assert.match(
+    await inspector.locator("#callResult").innerText(),
+    /INC-2026-0431/,
+  );
+  await inspector.locator("#callTool").selectOption("update_ticket_status");
+  await inspector
+    .locator("#callArgs")
+    .fill('{"ticketId":"INC-2026-0431","status":"resolved"}');
+  await inspector.locator("#callButton").click();
+  assert.match(
+    await inspector.locator("#callNotes").innerText(),
+    /may change data/,
+  );
+  await sw.evaluate((id) => chrome.tabs.update(id, { active: true }), plainId);
+  await inspector
+    .locator(".checks .level-warn", {
+      hasText: "The page hasn't registered any tools",
+    })
+    .waitFor();
+  assert.match(await inspector.locator("#pageInfo").innerText(), /\/tests\//);
+  assert.ok(await inspector.locator("#toolsSection").isHidden());
+  assert.match(
+    await inspector.locator("#events").innerText(),
+    /Called get_ticket_detail: succeeded/,
+  );
+
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop, navigation, session restore, no-tools page, skills (slash, manual, auto, settings).",
+    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop, navigation, session restore, no-tools page, skills (slash, manual, auto, settings), inspector (diagnosis, lint, manual call, validation, approval, tab follow).",
   );
   if (process.env.WEBMCP_TEST_KEY) {
     await panel.locator("#newSession").click();

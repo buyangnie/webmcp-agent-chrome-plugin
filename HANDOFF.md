@@ -1,7 +1,7 @@
 # WebMCP Agent — Engineering Handoff
 
 Last updated: 2026-09-22  
-Current release: **0.5.0**  
+Current release: **0.6.0**  
 Repository: <https://github.com/buyangnie/webmcp-agent-chrome-plugin> (public, branch `main`)  
 Workspace: `D:\_Working_Space\04. GTS - MS\Code\itsm-WebMCP`
 
@@ -9,7 +9,7 @@ Workspace: `D:\_Working_Space\04. GTS - MS\Code\itsm-WebMCP`
 
 The project contains a working, general-purpose Chrome side-panel agent and a separate ITSM WebMCP example. The extension discovers tools exposed by the selected webpage, supplies their schemas to an OpenAI-compatible model, executes model-requested calls, and returns their results to the conversation.
 
-Version 0.5.0 is implemented and packaged in `dist/webmcp-agent-0.5.0.zip`. The source directory `extension/` can be loaded directly without a build step. Since 0.2 the extension gained page-text context, file and image attachments (0.3), then a floating window, session persistence, continuing across navigation, event-driven discovery, a dark-grey palette with a line icon that follows Chrome's theme, and English/Simplified Chinese UI (0.4), then skills, a front-most floating window, real titles on pages without tools, and a hidden model label (0.5). Unit tests, the native-browser integration test, and visual checks passed for 0.5.0; the live DeepSeek run was not repeated.
+Version 0.6.0 is implemented and packaged in `dist/webmcp-agent-0.6.0.zip`; it adds the WebMCP inspector to 0.5. The source directory `extension/` can be loaded directly without a build step. Since 0.2 the extension gained page-text context, file and image attachments (0.3), then a floating window, session persistence, continuing across navigation, event-driven discovery, a dark-grey palette with a line icon that follows Chrome's theme, and English/Simplified Chinese UI (0.4), then skills, a front-most floating window, real titles on pages without tools, and a hidden model label (0.5). Unit tests, the native-browser integration test, and visual checks passed for 0.5.0; the live DeepSeek run was not repeated.
 
 The most recent user requirements are complete. There is no additional feature request pending at handoff. Future work listed below is advisory, not approved scope.
 
@@ -22,6 +22,7 @@ The most recent user requirements are complete. There is no additional feature r
 - UI strings live in `extension/_locales` (English default, Simplified Chinese). Source comments, documentation, and bundled example content are English.
 - Configurable OpenAI-compatible Base URL, API key, model name, and system prompt. The model name is not displayed; the composer shows "Connect a model to get started" only while no key is configured.
 - User-defined skills: picked with `/`, or loaded by the model through `load_skill` when marked Auto; managed in Settings; `SKILL.md` import/export. Three localized built-ins are seeded once and are ordinary, deletable skills.
+- An opt-in WebMCP inspector (Settings → Developer, then Inspect in the tools list) for diagnosis, tool lint, and direct calls. It never contacts the model; model trial runs were explicitly left out of scope.
 - A page without tools shows its real title and `0 tools`. "Can't read" wording appears only in the tools list, only for pages Chrome forbids.
 - Streaming responses, sanitized Markdown, tables, highlighted code, and copy actions.
 - Automatic tool discovery and multi-step tool calling, with visible execution cards.
@@ -54,6 +55,8 @@ Treat observations about Google's client as historical, version-specific evidenc
 | `extension/panel.js`                | Conversation state, settings, prompt migration, discovery refresh, agent loop, confirmations, and rendering           |
 | `extension/core.js`                 | Default prompt, endpoint normalization, SSE parsing, streamed tool-call assembly, schema aliases, confirmation policy |
 | `extension/bridge.js`               | Main-world tool discovery/execution, document binding, definition checks, cancellation                                |
+| `extension/inspector.*`             | Inspector window: diagnosis, tool cards, direct calls, events, copy/export                                            |
+| `extension/inspect.js`              | Pure diagnosis rules, tool lint, argument templates, and JSON Schema subset validation                                |
 | `extension/skills.js`               | Skill limits, `SKILL.md` parse/export, validation, slash matching, the `load_skill` tool and model catalog            |
 | `extension/icons/`                  | Original SVG and generated 16/32/48/128-pixel PNG icons                                                               |
 | `extension/vendor/`                 | Packaged Markdown, HTML sanitization, syntax-highlighting libraries, and licenses                                     |
@@ -61,6 +64,7 @@ Treat observations about Google's client as historical, version-specific evidenc
 | `client.html`                       | Parent-document client calling the embedded example as an external caller                                             |
 | `serve.py`                          | Static server adding `Origin-Agent-Cluster: ?1`                                                                       |
 | `tests/core.test.mjs`               | Protocol and confirmation-policy tests                                                                                |
+| `tests/inspect.test.mjs`            | Diagnosis, lint, template, and argument-validation rules                                                              |
 | `tests/skills.test.mjs`             | `SKILL.md` parsing/export, validation, matching, and `load_skill` exposure                                            |
 | `tests/e2e.mjs`                     | Extension/native-page integration with deterministic model responses; optional live model verification                |
 | `scripts/preview.mjs`               | UI-only visual checks with a mocked Chrome API; not evidence of real tool execution                                   |
@@ -100,6 +104,13 @@ Model requests run in the extension page, not in the target webpage. The backgro
 
 - There is no polling. Discovery runs on tab activation, load completion, title change, panel visibility, before each message, and when a page's `document.modelContext` fires `toolchange`. The main-world bridge re-posts that event; an isolated-world relay forwards it with `chrome.runtime.sendMessage`.
 - Pages without a WebMCP API, or whose `getTools()` throws, return `mode: "none"` with zero tools. Pages Chrome forbids (internal pages, Web Store) show the tab's title and `0 tools`; the tools list adds that Chrome doesn't allow reading them.
+
+### Inspector
+
+- Enabled by `inspector: true` in `chrome.storage.local`. `inspector.html?window=<browser window id>` opens as one reused `popup` window (`inspectorWindow` in session storage) and inspects that window's active tab, re-inspecting on tab activation, load, title change, and relayed `toolchange`.
+- The bridge's `inspect` action returns `env` (secure context, `originAgentCluster`, ready state, frame count, which APIs exist) plus tools. Tools whose string `inputSchema` doesn't parse are returned with `schemaError`; `discover` now drops only those tools instead of failing the whole page.
+- Diagnosis and lint findings are `{ level, key, args }` i18n keys from `inspect.js`; diagnosis keys have a matching `…Detail` message for the technical line. Calls go through the same `execute()` path as the agent, with `requiresConfirmation` for approval.
+- Chromium used for tests exposes `document.modelContext` even without the WebMCP flags, so the "WebMCP isn't turned on" state is covered only by unit tests.
 
 ### Skills
 
@@ -142,15 +153,16 @@ Default model: `deepseek-flash`
 
 A user-supplied API key was used successfully for live verification. Its value is intentionally absent from this document, source, screenshots, and release package. Obtain it through the user's settings or an approved secret channel when needed; do not copy it from conversation history into a file.
 
-| Data                                            | Storage / behavior                                                          |
-| ----------------------------------------------- | --------------------------------------------------------------------------- |
-| Base URL, model, instructions, preference flags | `chrome.storage.local`, under `config`                                      |
-| Skills                                          | `chrome.storage.local`, under `skills`                                      |
-| API key, default mode                           | `chrome.storage.session`; survives panel recreation but not browser restart |
-| API key with Remember enabled                   | Local extension storage; not an OS-encrypted credential vault               |
-| Conversation (`chat:<windowId>`, `chat:float`)  | `chrome.storage.session`; cleared when Chrome closes                        |
-| Floating window id (`floatWindow`)              | `chrome.storage.session`                                                    |
-| Demo external-call history                      | Page `localStorage`, key `itsm-webmcp-external-calls`, up to 50 entries     |
+| Data                                            | Storage / behavior                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------------------ |
+| Base URL, model, instructions, preference flags | `chrome.storage.local`, under `config`                                         |
+| Skills                                          | `chrome.storage.local`, under `skills`                                         |
+| Inspector switch / window id                    | `chrome.storage.local` `inspector`; `chrome.storage.session` `inspectorWindow` |
+| API key, default mode                           | `chrome.storage.session`; survives panel recreation but not browser restart    |
+| API key with Remember enabled                   | Local extension storage; not an OS-encrypted credential vault                  |
+| Conversation (`chat:<windowId>`, `chat:float`)  | `chrome.storage.session`; cleared when Chrome closes                           |
+| Floating window id (`floatWindow`)              | `chrome.storage.session`                                                       |
+| Demo external-call history                      | Page `localStorage`, key `itsm-webmcp-external-calls`, up to 50 entries        |
 
 The default prompt migration compares the saved prompt's SHA-256 hash with `LEGACY_PROMPT_HASHES` in `core.js` (the v0.1, v0.2, and v0.3 built-in prompts). Only those exact defaults are replaced. Custom instructions are deliberately preserved. When changing `DEFAULT_PROMPT`, add the old prompt's hash to that list.
 
@@ -199,6 +211,12 @@ node scripts/preview.mjs
 
 For an optional live run, set `WEBMCP_TEST_KEY` temporarily in the environment, run the E2E suite, then remove the variable. The live path currently targets the default DeepSeek endpoint and model.
 
+Verified for v0.6.0:
+
+- Twenty-three unit tests passed, including the inspector rules.
+- The E2E suite adds the inspector: enabling it in Settings, opening it from the tools list, clean diagnosis and three tool cards on the demo, schema validation blocking `{}`, a successful direct `get_ticket_detail` call, the approval prompt for `update_ticket_status`, and following a tab switch to a page with no tools.
+- Chinese light/dark screenshots of the inspector were inspected.
+
 Verified for v0.5.0:
 
 - Eighteen unit tests passed, including the new skills tests.
@@ -233,7 +251,7 @@ For a release:
 5. Package the extension folder, excluding credentials and development artifacts:
 
 ```powershell
-Compress-Archive -Path extension\* -DestinationPath dist/webmcp-agent-0.5.0.zip -Force
+Compress-Archive -Path extension\* -DestinationPath dist/webmcp-agent-0.6.0.zip -Force
 ```
 
 Use the new release version in the archive filename. `manifest.json` sits at the archive root, which the Chrome Web Store requires. For a manual install, extract it into a folder and load that folder, not the archive itself.
@@ -269,6 +287,7 @@ These are follow-up candidates, not claims that the current release implements t
 - `chrome.storage.session` has a 10 MB quota shared by all windows. Images are downscaled and only recent ones kept, but many image-heavy sessions can still exceed it; the panel then shows a notice and the conversation lives only in memory.
 - Some providers may reject historical tool messages when the current request has no `tools`; flattening covers tools missing from the current page but was only verified against the mock.
 - `panel.js` concentrates UI and agent state (now including the skills settings and slash menu); consider splitting it before large new features.
+- The inspector checks a JSON Schema subset (type, enum, min/max, lengths, required, additionalProperties, items), not `$ref`, `oneOf`, formats, or patterns. It doesn't scan iframes and has no model trial run.
 - Skills hold instructions only. `SKILL.md` bundles with scripts or reference files import without them; skills are not synced across devices.
 - `panel.css` contains initial styling plus later redesign overrides. Consolidating those rules would reduce maintenance risk without changing appearance.
 - Host permissions are broad. Optional per-origin permissions and a production credential-proxy strategy would need a separate design decision.

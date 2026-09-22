@@ -43,6 +43,17 @@ A skill is saved instructions for a recurring task. Three are preinstalled in th
 - Requests have a 12-step limit. A model stream fails after 90 seconds without data; tools time out after 60 seconds. Tool output sent to the model is limited to 32,000 characters.
 - Long conversations send the most recent 12 turns within a size budget.
 
+## WebMCP inspector
+
+For site developers, and for anyone wondering why a page shows `0 tools`. Turn it on under **Settings → Developer**; the tools list then gets an **Inspect** button. The inspector opens in its own window and follows the active tab of the browser window it was opened from.
+
+- **Diagnosis** checks, in plain words with the technical detail underneath: whether Chrome lets the extension read the page, whether the page is a secure context, which WebMCP interface exists, origin isolation when WebMCP is missing, whether `getTools()` failed or returned nothing, whether the page is still loading, and whether it has iframes (not inspected).
+- **Tools** shows each definition with read-only or needs-approval status and flags: names the model sees under another name, duplicate names, missing or very long descriptions (over 1,000 characters), unparsable or malformed input schemas, `required` entries missing from `properties`, unknown types, empty enums, and undocumented parameters.
+- **Call a tool** runs a tool directly, without the model. The arguments start from a template of the required parameters and are checked against the schema first; you can still call with invalid arguments to test the page's own handling. Tools not marked read-only ask for confirmation, because calls are real.
+- **Events** lists inspections, tool-change notifications from the page, and calls. **Copy report**, **Copy tool definitions**, and **Copy call log** put Markdown or JSON on the clipboard for bug reports.
+
+The inspector doesn't contact the model and sends nothing off the device.
+
 ## Page context
 
 Tools are discovered from the active main document when the tab changes, finishes loading, or reports a tool change, and before every message. There is no background polling. Execution binds to a specific tab and document, and definitions are checked again before execution.

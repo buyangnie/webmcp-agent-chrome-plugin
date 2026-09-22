@@ -388,5 +388,284 @@
   },
   "builtinTableBody": {
     "message": "Extract structured data from the current page into a Markdown table.\n- Find the main repeated items on the page, such as list rows, table rows, or cards, and choose clear column names.\n- If the user names the fields, use exactly those columns.\n- Keep values exactly as shown and leave a cell empty when a value is missing. Do not invent data.\n- After the table, say in one line how many rows were found and what, if anything, was left out."
+  },
+  "tabDeveloper": {
+    "message": "Developer"
+  },
+  "inspectorEnable": {
+    "message": "Enable the WebMCP inspector"
+  },
+  "inspectorEnableHint": {
+    "message": "Adds an Inspect button to the tools list. Use it to see why a page has no tools, check tool definitions, and call a tool directly without the model."
+  },
+  "openInspector": {
+    "message": "Open inspector"
+  },
+  "inspect": {
+    "message": "Inspect"
+  },
+  "inspectorTitle": {
+    "message": "WebMCP Inspector"
+  },
+  "inspectorNoPage": {
+    "message": "No page to inspect. Switch to a tab in the browser window."
+  },
+  "inspectorWindowClosed": {
+    "message": "The browser window this inspector followed was closed."
+  },
+  "inspectorRefresh": {
+    "message": "Inspect again"
+  },
+  "sectionDiagnosis": {
+    "message": "Diagnosis"
+  },
+  "sectionTools": {
+    "message": "Tools ({0})"
+  },
+  "sectionCall": {
+    "message": "Call a tool"
+  },
+  "sectionEvents": {
+    "message": "Events"
+  },
+  "copyReport": {
+    "message": "Copy report"
+  },
+  "copyTools": {
+    "message": "Copy tool definitions"
+  },
+  "copyCalls": {
+    "message": "Copy call log"
+  },
+  "badgeReadOnly": {
+    "message": "Read-only"
+  },
+  "badgeApproval": {
+    "message": "Needs approval"
+  },
+  "issuesCount": {
+    "message": "{0} issues"
+  },
+  "noIssues": {
+    "message": "No issues"
+  },
+  "showSchema": {
+    "message": "Input schema"
+  },
+  "noSchema": {
+    "message": "This tool takes no input."
+  },
+  "tryTool": {
+    "message": "Try it"
+  },
+  "toolLabel": {
+    "message": "Tool"
+  },
+  "argsLabel": {
+    "message": "Arguments (JSON)"
+  },
+  "resetArgs": {
+    "message": "Reset to template"
+  },
+  "callTool": {
+    "message": "Call"
+  },
+  "callAnyway": {
+    "message": "Call anyway"
+  },
+  "stopCall": {
+    "message": "Stop"
+  },
+  "callConfirm": {
+    "message": "This tool may change data on the page. Call it?"
+  },
+  "argsNotJson": {
+    "message": "Arguments must be a JSON object: {0}"
+  },
+  "argsInvalid": {
+    "message": "The arguments don't match the tool's input schema. You can still call it to test how the page handles them."
+  },
+  "callSucceeded": {
+    "message": "Succeeded in {0} ms"
+  },
+  "callFailed": {
+    "message": "Failed after {0} ms"
+  },
+  "callNoTools": {
+    "message": "This page has no tools to call."
+  },
+  "eventsEmpty": {
+    "message": "No events yet."
+  },
+  "eventInspected": {
+    "message": "Inspected {0}: {1} tools"
+  },
+  "eventToolChange": {
+    "message": "The page reported a tool change"
+  },
+  "eventCall": {
+    "message": "Called {0}: {1}"
+  },
+  "eventOk": {
+    "message": "succeeded"
+  },
+  "eventError": {
+    "message": "failed"
+  },
+  "diagPageBlocked": {
+    "message": "Chrome doesn't let extensions read this page"
+  },
+  "diagPageBlockedDetail": {
+    "message": "Internal pages (chrome://), the Web Store, and other extensions' pages can't be inspected. For file:// pages, turn on Allow access to file URLs in this extension's details."
+  },
+  "diagPageReadable": {
+    "message": "The extension can read this page"
+  },
+  "diagPageReadableDetail": {
+    "message": "Scripts can run in the page's main world."
+  },
+  "diagSecure": {
+    "message": "The page is secure"
+  },
+  "diagSecureDetail": {
+    "message": "Served over HTTPS or from localhost."
+  },
+  "diagInsecure": {
+    "message": "The page isn't secure"
+  },
+  "diagInsecureDetail": {
+    "message": "WebMCP needs HTTPS or localhost. isSecureContext is false."
+  },
+  "diagApi": {
+    "message": "WebMCP is available"
+  },
+  "diagApiDetail": {
+    "message": "Found document.modelContext.getTools()."
+  },
+  "diagApiLegacy": {
+    "message": "Only the older testing interface is available"
+  },
+  "diagApiLegacyDetail": {
+    "message": "Found navigator.modelContextTesting but not document.modelContext. Tools work, but the page or the browser uses an older WebMCP version."
+  },
+  "diagApiPartial": {
+    "message": "WebMCP is only partly available"
+  },
+  "diagApiPartialDetail": {
+    "message": "document.modelContext exists but has no getTools(). The browser's WebMCP version may not match what this extension supports."
+  },
+  "diagApiMissing": {
+    "message": "WebMCP isn't turned on for this page"
+  },
+  "diagApiMissingDetail": {
+    "message": "Neither document.modelContext nor navigator.modelContextTesting exists. Check the Chrome version and the WebMCP flag in chrome://flags. If both are fine, the page itself doesn't use WebMCP."
+  },
+  "diagIsolation": {
+    "message": "The page isn't origin-isolated"
+  },
+  "diagIsolationDetail": {
+    "message": "window.originAgentCluster is false. Some Chrome setups expose WebMCP only to origin-isolated pages. Serve the page with the response header Origin-Agent-Cluster: ?1."
+  },
+  "diagToolsError": {
+    "message": "The page failed to list its tools"
+  },
+  "diagToolsErrorDetail": {
+    "message": "getTools() threw: {0}"
+  },
+  "diagTools": {
+    "message": "The page registered {0} tools"
+  },
+  "diagToolsDetail": {
+    "message": "Details and checks are below."
+  },
+  "diagToolsNone": {
+    "message": "The page hasn't registered any tools"
+  },
+  "diagToolsNoneDetail": {
+    "message": "WebMCP is available, but getTools() returned an empty list. The page may register tools later, after sign-in, or on another route."
+  },
+  "diagLoading": {
+    "message": "The page is still loading"
+  },
+  "diagLoadingDetail": {
+    "message": "document.readyState isn't complete yet. Inspect again when it finishes."
+  },
+  "diagFrames": {
+    "message": "The page has {0} frames"
+  },
+  "diagFramesDetail": {
+    "message": "Only the top document is inspected. Tools registered inside iframes aren't discovered."
+  },
+  "lintNameMissing": {
+    "message": "The tool has no name."
+  },
+  "lintNameRenamed": {
+    "message": "The name has characters models don't accept, so the model sees it as {0}."
+  },
+  "lintNameDuplicate": {
+    "message": "Another tool has the same name."
+  },
+  "lintDescriptionMissing": {
+    "message": "No description. The model decides when to use a tool from its description."
+  },
+  "lintDescriptionLong": {
+    "message": "The description is {0} characters. It is sent with every message; aim for under 1,000."
+  },
+  "lintSchemaUnparsable": {
+    "message": "The input schema isn't valid JSON ({0}). Conversations skip this tool."
+  },
+  "lintSchemaNotObject": {
+    "message": "The input schema must be a JSON object."
+  },
+  "lintSchemaType": {
+    "message": "The input schema's type is \"{0}\"; it must be \"object\"."
+  },
+  "lintPropertiesInvalid": {
+    "message": "properties must be an object."
+  },
+  "lintRequiredInvalid": {
+    "message": "required must be an array of parameter names."
+  },
+  "lintRequiredUnknown": {
+    "message": "required lists \"{0}\", which isn't in properties."
+  },
+  "lintParamInvalid": {
+    "message": "Parameter \"{0}\" isn't a schema object."
+  },
+  "lintParamType": {
+    "message": "Parameter \"{0}\" has an unknown type \"{1}\"."
+  },
+  "lintEnumEmpty": {
+    "message": "Parameter \"{0}\" has an empty enum, so no value is valid."
+  },
+  "lintParamUndocumented": {
+    "message": "Parameters without a description: {0}."
+  },
+  "lintNeedsApproval": {
+    "message": "Not marked read-only, so every call asks the user for approval."
+  },
+  "argType": {
+    "message": "{0}: expected {1}, got {2}."
+  },
+  "argEnum": {
+    "message": "{0}: must be one of {1}."
+  },
+  "argMinimum": {
+    "message": "{0}: must be at least {1}."
+  },
+  "argMaximum": {
+    "message": "{0}: must be at most {1}."
+  },
+  "argMinLength": {
+    "message": "{0}: needs at least {1} characters."
+  },
+  "argMaxLength": {
+    "message": "{0}: allows at most {1} characters."
+  },
+  "argRequired": {
+    "message": "{0}: required."
+  },
+  "argUnknown": {
+    "message": "{0}: not an allowed parameter."
   }
 }

@@ -319,6 +319,8 @@ footer {
 }
 #configForm[hidden],
 #paneSkills[hidden],
+#paneDeveloper[hidden],
+#inspect[hidden],
 #skillList[hidden],
 #skillEditor[hidden] {
   display: none;
