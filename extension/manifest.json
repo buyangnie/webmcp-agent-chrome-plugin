@@ -1,17 +1,25 @@
 {
   "manifest_version": 3,
-  "name": "WebMCP Agent",
-  "description": "A general-purpose side-panel agent for webpage WebMCP tools and OpenAI-compatible models.",
-  "version": "0.3.0",
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
+  "version": "0.4.0",
   "minimum_chrome_version": "120",
-  "permissions": ["sidePanel", "storage", "scripting", "activeTab", "tabs"],
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "scripting",
+    "activeTab",
+    "tabs",
+    "offscreen"
+  ],
   "host_permissions": ["http://*/*", "https://*/*", "file:///*"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
   "action": {
-    "default_title": "Open WebMCP Agent",
+    "default_title": "__MSG_actionTitle__",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png"
@@ -27,6 +35,6 @@
     "default_path": "panel.html"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https: http:; img-src 'self' data:; style-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src 'self' data:; style-src 'self'"
   }
 }

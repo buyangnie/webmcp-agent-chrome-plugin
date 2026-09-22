@@ -1,8 +1,9 @@
 // Runs only in the selected document's MAIN world; no credentials are passed here.
-const PAGE_TEXT_LIMIT = 24000;
+// Injected as source text, so it must not reference anything outside itself.
 export async function pageBridge(action, payload = {}) {
   try {
     if (action === "read") {
+      const PAGE_TEXT_LIMIT = 24000;
       const text = (document.body?.innerText || "")
         .replace(/\n{3,}/g, "\n\n")
         .trim();
@@ -24,10 +25,26 @@ export async function pageBridge(action, payload = {}) {
     const mc = document.modelContext;
     const legacy = navigator.modelContextTesting;
     const api = mc && typeof mc.getTools === "function" ? mc : legacy;
-    if (!api)
+    if (!api) {
+      if (action === "discover")
+        return {
+          ok: true,
+          title: document.title,
+          url: location.href,
+          mode: "none",
+          tools: [],
+        };
       throw Error(
-        "WebMCP discovery is unavailable. Check the browser version, WebMCP flag, and origin isolation.",
+        "WebMCP is unavailable on this page. Check the browser version, WebMCP flag, and origin isolation.",
       );
+    }
+    const watched = Symbol.for("webmcp-agent.watch");
+    if (api === mc && !window[watched] && mc.addEventListener) {
+      window[watched] = true;
+      mc.addEventListener("toolchange", () =>
+        window.postMessage({ webmcpAgent: "toolchange" }, "*"),
+      );
+    }
     const list = api.getTools ? await api.getTools() : await api.listTools();
     const clean = (t) => ({
       name: t.name,
@@ -125,6 +142,15 @@ export async function readPage(target) {
     throw Error(r?.result?.error || "Could not read the page");
   return { text: r.result.text, truncated: r.result.truncated };
 }
+// Runs in the isolated world, which can reach the extension; the page cannot.
+function relayToolChanges() {
+  if (globalThis.__webmcpAgentRelay) return;
+  globalThis.__webmcpAgentRelay = true;
+  addEventListener("message", (e) => {
+    if (e.source === window && e.data?.webmcpAgent === "toolchange")
+      chrome.runtime.sendMessage({ type: "toolchange" }).catch(() => {});
+  });
+}
 export async function discover(tabId) {
   const [r] = await chrome.scripting.executeScript({
     target: { tabId },
@@ -134,6 +160,13 @@ export async function discover(tabId) {
   });
   if (!r?.result?.ok)
     throw Error(r?.result?.error || "Could not discover page tools");
+  if (r.result.mode === "document.modelContext")
+    await chrome.scripting
+      .executeScript({
+        target: { tabId, documentIds: [r.documentId] },
+        func: relayToolChanges,
+      })
+      .catch(() => {});
   return { ...r.result, tabId, documentId: r.documentId };
 }
 export async function execute(target, tool, args, signal) {

@@ -1,22 +1,25 @@
 # WebMCP Agent
 
-A general-purpose Chrome side-panel agent for WebMCP-enabled pages. Version 0.2 introduces an English-only project and a Google-inspired Material visual design with an original four-color icon. This is an independent extension, not a Google product.
+A general-purpose Chrome assistant for the page you are on. It reads the page, accepts files and images, and uses the page's WebMCP tools when it has them, with a model you configure. It runs in the side panel or a floating window, in English or Simplified Chinese. This is an independent extension, not a Google product.
+
+Version 0.4 adds the floating window, conversations that survive closing the panel and navigating, a dark-grey Chrome-native look with a new icon, and a Chinese interface. See [PRIVACY.md](PRIVACY.md) and [STORE.md](STORE.md) for the privacy policy and Web Store listing.
 
 ## Install
 
 1. Open `chrome://extensions` and enable **Developer mode**.
 2. Choose **Load unpacked** and select this project's `extension` directory.
-3. Open a WebMCP-enabled page and click the extension's toolbar icon.
+3. Open any webpage and click the extension's toolbar icon. Pages with WebMCP tools also let the model act on them.
 4. Open **Settings**, enter your API key, test the connection, and save.
 
 Default endpoint: `https://api.deepseek.com`. Default model: `deepseek-flash`. Both are editable. No credentials are included in source or release packages.
 
-Already installed? Reload the existing extension on `chrome://extensions`, then close and reopen its side panel. The product name and toolbar icon update when Chrome reloads the extension. Settings are preserved. Only the exact previous built-in prompt is automatically migrated to English; custom prompts remain unchanged.
+Already installed? Reload the existing extension on `chrome://extensions`, then close and reopen its side panel. Settings are preserved. An unmodified built-in prompt from an earlier version is replaced with the current default; custom prompts remain unchanged.
 
 ## Project layout
 
 - `extension/`: ready-to-load Manifest V3 extension; see its README for details.
-- `extension/icons/icon.svg`: original vector icon, with generated Chrome PNG assets.
+- `extension/icons/`: vector icon sources with generated light and dark PNG assets.
+- `extension/_locales/`: English and Simplified Chinese UI strings.
 - `index.html`, `demo.js`, `demo.css`: standalone English ITSM example, not part of the extension's business logic.
 - `client.html`: external-caller control page.
 - `serve.py`: local static server with `Origin-Agent-Cluster: ?1`.
@@ -35,7 +38,7 @@ The example prefers the native WebMCP API and falls back to a local implementati
 
 Run `npm ci`, `npm test`, then `npx playwright install chromium`. With the demo server running, run `npm run test:e2e`.
 
-Browser tests use a temporary independent Chrome for Testing profile. They exercise the extension page and real scripting APIs against native WebMCP, including tool discovery, execution, confirmation/decline, stopping, new sessions, navigation isolation, and sanitized Markdown. Controlled model responses make the main suite deterministic. Set the temporary `WEBMCP_TEST_KEY` environment variable for an additional real DeepSeek run; never commit credentials.
+Browser tests use a temporary independent Chrome for Testing profile. They exercise the extension page and real scripting APIs against native WebMCP, including tool discovery, page text, execution, confirmation/decline, stopping, new sessions, continuing after navigation, session restore, pages without tools, and sanitized Markdown. Controlled model responses make the main suite deterministic. Set the temporary `WEBMCP_TEST_KEY` environment variable for an additional real DeepSeek run; never commit credentials.
 
 Run `npm run vendor` to update packaged runtime libraries. Run `node scripts/icons.mjs` to regenerate PNG icons using installed Chrome, or supply `CHROME_PATH`. No CDN or build server is required at runtime.
 

@@ -1,0 +1,125 @@
+{
+  "extName": { "message": "WebMCP Agent" },
+  "extDescription": {
+    "message": "浏览器助手：读取当前页面，接收文件和图片，并用你自己的模型调用页面提供的 WebMCP 工具。"
+  },
+  "actionTitle": { "message": "打开 WebMCP Agent" },
+  "connecting": { "message": "正在连接此标签页…" },
+  "cantAccess": { "message": "无法访问此页面" },
+  "untitled": { "message": "无标题页面" },
+  "toolsCount": { "message": "{0} 个工具" },
+  "toolsOne": { "message": "1 个工具" },
+  "availableTools": { "message": "可用工具" },
+  "refreshTools": { "message": "刷新工具" },
+  "newSession": { "message": "新会话" },
+  "popOut": { "message": "在悬浮窗口中打开" },
+  "dock": { "message": "移回侧边栏" },
+  "settings": { "message": "设置" },
+  "welcomeTitle": { "message": "问问这个页面" },
+  "welcomeBody": {
+    "message": "我可以读取此页面的内容，查看你附加的文件和图片，并使用页面提供的工具。修改页面的操作会先请你批准。"
+  },
+  "suggestSummarize": { "message": "总结此页面" },
+  "promptSummarize": { "message": "用几个要点总结这个页面。" },
+  "suggestCapabilities": { "message": "你能在这里做什么？" },
+  "promptCapabilities": {
+    "message": "你能帮我在这个页面上做什么？如果页面提供了工具，也一并说明。"
+  },
+  "placeholder": { "message": "问问这个页面" },
+  "addFiles": { "message": "添加文件" },
+  "connectModel": { "message": "连接模型后即可开始" },
+  "send": { "message": "发送" },
+  "stop": { "message": "停止生成" },
+  "removePage": { "message": "移除页面内容" },
+  "removeFile": { "message": "移除 {0}" },
+  "pastedImage": { "message": "粘贴的图片" },
+  "pastedImageN": { "message": "粘贴的图片 {0}" },
+  "tooManyImages": { "message": "最多可附加 4 张图片。" },
+  "tooManyTexts": { "message": "最多可附加 4 个文本文件。" },
+  "imageTooLarge": { "message": "{0} 超过 20 MB。" },
+  "textTooLarge": { "message": "{0} 超过 100 KB。" },
+  "unsupportedFile": { "message": "不支持 {0}。" },
+  "imageUnreadable": { "message": "无法将 {0} 读取为图片。" },
+  "copyCode": { "message": "复制代码" },
+  "copyResponse": { "message": "复制回答" },
+  "copied": { "message": "已复制" },
+  "copyFailed": { "message": "复制失败，请手动选中文字复制。" },
+  "thinking": { "message": "正在思考" },
+  "toolPreparing": { "message": "准备中" },
+  "toolRunning": { "message": "运行中…" },
+  "toolCompleted": { "message": "已完成" },
+  "toolFailed": { "message": "未执行或失败" },
+  "toolInterrupted": { "message": "已中断" },
+  "approvalRequired": { "message": "需要批准" },
+  "approvalNote": { "message": "将在“{0}”上运行。" },
+  "allow": { "message": "允许" },
+  "decline": { "message": "拒绝" },
+  "readOnly": { "message": "只读" },
+  "statusWorking": { "message": "正在处理你的请求…" },
+  "statusWorkingResults": { "message": "正在根据结果继续处理…" },
+  "statusCompleted": { "message": "已完成" },
+  "statusWaiting": { "message": "等待批准：{0}" },
+  "statusCalling": { "message": "正在调用 {0}…" },
+  "statusStepLimit": { "message": "已达到步骤上限" },
+  "statusStopped": { "message": "已停止" },
+  "statusFailed": { "message": "请求失败" },
+  "statusNewSession": { "message": "已开始新会话" },
+  "statusSettingsSaved": { "message": "设置已保存" },
+  "statusSettingsSavedNext": { "message": "设置已保存，新会话中生效。" },
+  "noticeStepLimit": { "message": "已达到 12 步上限。请缩小任务范围后继续。" },
+  "noticeStopped": { "message": "已停止。已完成的页面操作不会撤销。" },
+  "noticeEmpty": { "message": "模型返回了空回答。" },
+  "noticePageUnread": { "message": "无法读取页面，本次未附带页面内容。" },
+  "noticeTooLarge": {
+    "message": "这段对话太大，无法保存。关闭面板后会清空。"
+  },
+  "noticeFloatFailed": { "message": "无法打开悬浮窗口。" },
+  "retry": { "message": "用已有结果重试" },
+  "nowOn": { "message": "当前页面：{0}" },
+  "toolsNone": {
+    "message": "此页面没有提供 WebMCP 工具。你仍然可以询问页面内容。"
+  },
+  "toolsUnavailable": {
+    "message": "此浏览器未启用 WebMCP。你仍然可以询问页面内容。"
+  },
+  "toolsCantAccess": { "message": "Chrome 不允许扩展读取此页面。" },
+  "toolsMode": { "message": "{0} · 当前主文档" },
+  "settingsSubtitle": { "message": "你的模型和指令。" },
+  "closeSettings": { "message": "关闭设置" },
+  "closeTools": { "message": "关闭工具列表" },
+  "modelConnection": { "message": "模型连接" },
+  "modelConnectionHint": {
+    "message": "可连接任何兼容 OpenAI Chat Completions 的接口。"
+  },
+  "baseUrl": { "message": "接口地址" },
+  "apiKey": { "message": "API 密钥" },
+  "apiKeyPlaceholder": { "message": "输入你的 API 密钥" },
+  "show": { "message": "显示" },
+  "hide": { "message": "隐藏" },
+  "rememberKey": { "message": "在此设备上记住密钥" },
+  "rememberKeyHint": {
+    "message": "否则密钥只保存在内存中，关闭 Chrome 后清除。"
+  },
+  "modelName": { "message": "模型名称" },
+  "instructions": { "message": "指令" },
+  "resetDefault": { "message": "恢复默认" },
+  "systemPrompt": { "message": "系统提示词" },
+  "instructionsHint": {
+    "message": "设置助手的角色和回答风格。修改在新会话中生效。"
+  },
+  "privacyNote": {
+    "message": "对话、页面内容、附件和工具结果会发送给你的模型服务商。API 密钥不会提供给任何网页。"
+  },
+  "testConnection": { "message": "测试连接" },
+  "saveChanges": { "message": "保存" },
+  "testStreaming": { "message": "正在测试流式响应…" },
+  "testToolCalling": { "message": "流式响应正常，正在测试工具调用…" },
+  "testPassed": {
+    "message": "✓ 流式响应正常\n✓ 工具调用正常（未执行任何页面工具）"
+  },
+  "testNoTools": {
+    "message": "✓ 流式响应正常\n! 此模型没有返回工具调用。对话和页面内容可以使用，但无法调用页面工具。"
+  },
+  "testFailed": { "message": "测试失败：{0}" },
+  "enterModelKey": { "message": "请填写模型名称和 API 密钥" }
+}

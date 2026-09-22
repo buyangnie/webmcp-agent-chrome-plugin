@@ -10,16 +10,34 @@ try {
   const p = await b.newPage({ viewport: { width: 440, height: 900 } });
   p.on("pageerror", (e) => console.log("ERROR", e.message));
   await p.addInitScript(() => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/extension/_locales/en/messages.json", false);
+    xhr.send();
+    const messages = JSON.parse(xhr.responseText);
+    const event = { addListener() {} };
     window.chrome = {
-      windows: { getCurrent: async () => ({ id: 1 }) },
+      i18n: {
+        getMessage: (key) => messages[key]?.message || "",
+        getUILanguage: () => "en",
+      },
+      runtime: { sendMessage: async () => {}, onMessage: event },
+      windows: {
+        getCurrent: async () => ({ id: 1 }),
+        onFocusChanged: event,
+        WINDOW_ID_NONE: -1,
+      },
       storage: {
         local: { get: async () => ({}), set: async () => {} },
-        session: { get: async () => ({}), set: async () => {} },
+        session: {
+          get: async () => ({}),
+          set: async () => {},
+          remove: async () => {},
+        },
       },
       tabs: {
         query: async () => [{ id: 1 }],
-        onActivated: { addListener() {} },
-        onUpdated: { addListener() {} },
+        onActivated: event,
+        onUpdated: event,
       },
       scripting: {
         executeScript: async () => [

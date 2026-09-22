@@ -16,3 +16,18 @@ test("read returns visible page text and marks truncation", async () => {
   assert.equal(long.text.length, 24000);
   assert.equal(long.truncated, true);
 });
+
+test("discover reports a page without WebMCP as zero tools, not an error", async () => {
+  globalThis.window = {};
+  globalThis.document = { title: "Plain page" };
+  globalThis.navigator ??= {};
+  globalThis.location = {
+    href: "https://example.com/",
+    origin: "https://example.com",
+  };
+  const page = await pageBridge("discover");
+  assert.equal(page.ok, true);
+  assert.equal(page.mode, "none");
+  assert.deepEqual(page.tools, []);
+  assert.equal(page.title, "Plain page");
+});

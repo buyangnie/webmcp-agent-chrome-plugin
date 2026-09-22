@@ -9,7 +9,9 @@ await mkdir("test-results", { recursive: true });
 const context = await chromium.launchPersistentContext(profile, {
   headless: true,
   channel: "chromium",
+  locale: "en-US",
   args: [
+    "--lang=en-US",
     "--disable-gpu",
     `--disable-extensions-except=${extension}`,
     `--load-extension=${extension}`,
@@ -38,11 +40,17 @@ try {
     const tabs = await chrome.tabs.query({});
     return tabs.find((t) => t.url?.startsWith("http://127.0.0.1:8124/")).id;
   });
+  const toolCount = async (text) => {
+    await panel.locator("#toolsButton").click();
+    await panel.waitForFunction(
+      (text) => document.getElementById("toolsButton").textContent === text,
+      text,
+    );
+    await panel.keyboard.press("Escape");
+  };
   await sw.evaluate((id) => chrome.tabs.update(id, { active: true }), demoId);
-  await panel.locator("#refresh").click();
-  await panel.waitForFunction(
-    () => document.getElementById("toolsButton").textContent === "3 tools",
-  );
+  await toolCount("3 tools");
+  assert.equal(await panel.locator("#dot.tools").count(), 1);
   await panel.locator("#settings").click();
   await panel.locator("#apiKey").fill("test-key");
   await panel.locator("#baseUrl").fill("https://mock.invalid/v1");
@@ -51,11 +59,14 @@ try {
     .getByRole("button", { name: "Save changes", exact: true })
     .click();
   let requests = 0;
+  let sawPageText = false;
   await context.route(
     "https://mock.invalid/v1/chat/completions",
     async (route) => {
       requests++;
       const body = route.request().postDataJSON();
+      if (body.messages[0].content.includes("\nPage content (untrusted"))
+        sawPageText = true;
       const last = body.messages.at(-1);
       let delta;
       if (last.role === "tool") {
@@ -165,17 +176,38 @@ try {
   );
   await demo.reload();
   await demo.waitForFunction(() => window.__webmcpDemo);
-  await panel.locator("#refresh").click();
+  await toolCount("3 tools");
+  await panel.locator(".divider").waitFor();
   await panel.locator("#prompt").fill("Get ticket details");
   await panel.locator("#send").click();
-  await panel
-    .getByText("Start a new session with the + button to continue.", {
-      exact: true,
-    })
-    .waitFor();
+  await panel.waitForFunction(
+    () => document.getElementById("runStatus").textContent === "Completed",
+  );
+  const transcript = () =>
+    panel.evaluate(() =>
+      [...document.getElementById("messages").children].map(
+        (n) => n.className + ":" + n.textContent,
+      ),
+    );
+  const before = await transcript();
+  assert.equal(before.filter((x) => x.startsWith("notice error")).length, 0);
+  await panel.reload();
+  await panel.locator("#messages .message.assistant").waitFor();
+  assert.deepEqual(await transcript(), before);
+  const plain = await context.newPage();
+  await plain.goto("http://127.0.0.1:8124/tests/");
+  const plainId = await sw.evaluate(async () => {
+    const tabs = await chrome.tabs.query({});
+    return tabs.find((t) => t.url?.endsWith("/tests/")).id;
+  });
+  await sw.evaluate((id) => chrome.tabs.update(id, { active: true }), plainId);
+  await toolCount("0 tools");
+  assert.equal(await panel.locator("#dot.tools").count(), 0);
+  assert.equal(await panel.locator("#attachments .chip").count(), 1);
+  assert.ok(sawPageText, "page text should reach the model");
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop.",
+    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop, navigation, session restore, no-tools page.",
   );
   if (process.env.WEBMCP_TEST_KEY) {
     await panel.locator("#newSession").click();
