@@ -22,6 +22,7 @@ WebMCP Agent is a browser assistant in Chrome's side panel that works with the A
 • Attach files and images, or paste a screenshot straight into the message box.
 • Use page tools. On sites that provide WebMCP tools, the model can look things up and take actions for you. Anything that changes the page asks for your approval first.
 • Skills. Save instructions for tasks you repeat and pick one by typing /, or let the model use it when it fits. Import and export SKILL.md files.
+• Diagrams. Flowcharts, sequence diagrams, and other Mermaid diagrams in answers are drawn in place; enlarge them or save them as SVG or PNG.
 • Bring your own model. Connect any OpenAI-compatible Chat Completions endpoint, such as DeepSeek or OpenAI, with your own API key.
 • Side panel or floating window. Move the conversation into its own window and back whenever you like.
 • Follows Chrome's light and dark themes, in English and Simplified Chinese.
@@ -36,6 +37,7 @@ WebMCP Agent 是 Chrome 侧边栏里的浏览器助手，使用你自己选择�
 • 附加文件和图片，也可以直接把截图粘贴到输入框。
 • 使用页面工具：在提供 WebMCP 工具的网站上，模型可以帮你查询和操作；任何会修改页面的操作都会先请你批准。
 • Skills：把常用任务的指令存成 skill，输入 / 即可选用，也可让模型在合适时自动使用；支持导入和导出 SKILL.md。
+• 图表：回答中的流程图、时序图等 Mermaid 图表直接绘制出来，可放大查看，也可保存为 SVG 或 PNG。
 • 自带模型：可连接任何兼容 OpenAI Chat Completions 的接口（如 DeepSeek、OpenAI），使用你自己的 API 密钥。
 • 侧边栏或悬浮窗口：随时把对话移到独立窗口，也可以移回侧边栏。
 • 跟随 Chrome 的浅色和深色主题，支持英文和简体中文。

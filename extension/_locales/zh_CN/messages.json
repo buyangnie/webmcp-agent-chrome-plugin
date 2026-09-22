@@ -667,5 +667,47 @@
   },
   "argUnknown": {
     "message": "{0}：不是允许的参数。"
+  },
+  "diagram": {
+    "message": "图表"
+  },
+  "diagramDrawing": {
+    "message": "正在生成图表…"
+  },
+  "diagramFailed": {
+    "message": "无法绘制此图表，已显示源码。"
+  },
+  "diagramErrorDetails": {
+    "message": "错误详情"
+  },
+  "showCode": {
+    "message": "代码"
+  },
+  "showDiagram": {
+    "message": "图表"
+  },
+  "downloadSvg": {
+    "message": "下载 SVG"
+  },
+  "downloadPng": {
+    "message": "下载 PNG"
+  },
+  "diagramPngFailed": {
+    "message": "此图表无法保存为 PNG，请下载 SVG。"
+  },
+  "enlarge": {
+    "message": "放大"
+  },
+  "zoomIn": {
+    "message": "放大"
+  },
+  "zoomOut": {
+    "message": "缩小"
+  },
+  "zoomFit": {
+    "message": "适应窗口"
+  },
+  "closeDiagram": {
+    "message": "关闭"
   }
 }

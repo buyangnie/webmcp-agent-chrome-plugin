@@ -25,6 +25,7 @@ import {
 import { marked } from "./vendor/marked.js";
 import DOMPurify from "./vendor/purify.js";
 import hljs from "./vendor/highlight.js";
+import { fenceOpen, cachedDiagram, renderDiagram } from "./diagrams.js";
 
 const $ = (id) => document.getElementById(id);
 const t = (key, ...args) =>
@@ -222,7 +223,193 @@ function record(entry) {
   return entry;
 }
 
-function renderMarkdown(el, text) {
+const darkScheme = matchMedia("(prefers-color-scheme: dark)");
+const diagramTheme = () => (darkScheme.matches ? "dark" : "light");
+function download(name, blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+async function diagramPng(result) {
+  const img = new Image();
+  img.src = result.url;
+  await img.decode();
+  const scale = 2;
+  const canvas = document.createElement("canvas");
+  canvas.width = result.width * scale;
+  canvas.height = result.height * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(Error("PNG"))), "image/png"),
+  );
+}
+function diagramSource(code) {
+  const pre = document.createElement("pre");
+  const el = document.createElement("code");
+  el.textContent = code;
+  pre.append(el);
+  return pre;
+}
+function diagramCard(code, streaming) {
+  const fig = document.createElement("figure");
+  fig.className = "diagram";
+  fig.dataset.code = code;
+  if (streaming) {
+    fig.dataset.streaming = "";
+    const note = document.createElement("figcaption");
+    note.textContent = t("diagramDrawing");
+    fig.append(diagramSource(code), note);
+  } else paintDiagram(fig);
+  return fig;
+}
+function paintDiagram(fig) {
+  const code = fig.dataset.code;
+  const theme = diagramTheme();
+  const result = cachedDiagram(code, theme);
+  const actions = document.createElement("div");
+  actions.className = "diagram-actions";
+  if (!result) {
+    const note = document.createElement("figcaption");
+    note.textContent = t("diagramDrawing");
+    fig.replaceChildren(diagramSource(code), note);
+    renderDiagram(code, theme).then(() => {
+      if (fig.isConnected) paintDiagram(fig);
+    });
+    return;
+  }
+  if (result.error) {
+    const note = document.createElement("figcaption");
+    note.className = "diagram-error";
+    note.textContent = t("diagramFailed");
+    const more = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.textContent = t("diagramErrorDetails");
+    const pre = document.createElement("pre");
+    pre.textContent = result.error;
+    more.append(summary, pre);
+    note.append(more);
+    actions.append(copyButton(() => code, "copyCode"));
+    fig.replaceChildren(diagramSource(code), note, actions);
+    return;
+  }
+  const view = document.createElement("button");
+  view.type = "button";
+  view.className = "diagram-view";
+  view.title = t("enlarge");
+  const img = document.createElement("img");
+  img.src = result.url;
+  img.alt = t("diagram");
+  img.width = result.width;
+  img.height = result.height;
+  view.append(img);
+  view.onclick = () => openDiagram(result);
+  const source = diagramSource(code);
+  source.hidden = true;
+  const toggle = button(t("showCode"), null, "copy");
+  toggle.onclick = () => {
+    source.hidden = !source.hidden;
+    view.hidden = !source.hidden;
+    toggle.textContent = source.hidden ? t("showCode") : t("showDiagram");
+  };
+  const svg = button("SVG", null, "copy");
+  svg.title = t("downloadSvg");
+  svg.onclick = () =>
+    download("diagram.svg", new Blob([result.svg], { type: "image/svg+xml" }));
+  const png = button("PNG", null, "copy");
+  png.title = t("downloadPng");
+  png.onclick = () =>
+    diagramPng(result).then(
+      (blob) => download("diagram.png", blob),
+      () => status(t("diagramPngFailed")),
+    );
+  const zoom = button(t("enlarge"), null, "copy");
+  zoom.onclick = () => openDiagram(result);
+  actions.append(
+    toggle,
+    copyButton(() => code, "copyCode"),
+    svg,
+    png,
+    zoom,
+  );
+  fig.replaceChildren(view, source, actions);
+}
+darkScheme.addEventListener("change", () => {
+  for (const fig of document.querySelectorAll(
+    "#messages figure.diagram:not([data-streaming])",
+  ))
+    paintDiagram(fig);
+});
+
+let zoomScale = 1;
+let zoomed = null;
+function setZoom(scale) {
+  zoomScale = Math.min(4, Math.max(0.1, scale));
+  const img = $("diagramImage");
+  img.width = Math.round(zoomed.width * zoomScale);
+  img.height = Math.round(zoomed.height * zoomScale);
+  $("zoomLevel").textContent = Math.round(zoomScale * 100) + "%";
+}
+function fitZoom() {
+  const stage = $("diagramStage");
+  setZoom(
+    Math.min(
+      (stage.clientWidth - 32) / zoomed.width,
+      (stage.clientHeight - 32) / zoomed.height,
+      2,
+    ),
+  );
+}
+function openDiagram(result) {
+  zoomed = result;
+  $("diagramImage").src = result.url;
+  $("diagramDialog").showModal();
+  fitZoom();
+}
+$("zoomIn").onclick = () => setZoom(zoomScale * 1.25);
+$("zoomOut").onclick = () => setZoom(zoomScale / 1.25);
+$("zoomFit").onclick = fitZoom;
+$("diagramStage").addEventListener(
+  "wheel",
+  (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    setZoom(zoomScale * (e.deltaY < 0 ? 1.1 : 1 / 1.1));
+  },
+  { passive: false },
+);
+{
+  const stage = $("diagramStage");
+  let drag = null;
+  stage.addEventListener("pointerdown", (e) => {
+    drag = {
+      x: e.clientX,
+      y: e.clientY,
+      left: stage.scrollLeft,
+      top: stage.scrollTop,
+    };
+    stage.setPointerCapture(e.pointerId);
+    stage.classList.add("dragging");
+  });
+  stage.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    stage.scrollLeft = drag.left - (e.clientX - drag.x);
+    stage.scrollTop = drag.top - (e.clientY - drag.y);
+  });
+  const end = () => {
+    drag = null;
+    stage.classList.remove("dragging");
+  };
+  stage.addEventListener("pointerup", end);
+  stage.addEventListener("pointercancel", end);
+}
+
+function renderMarkdown(el, text, streaming = false) {
   el.innerHTML = DOMPurify.sanitize(
     marked.parse(text, { breaks: true, gfm: true }),
     {
@@ -244,7 +431,14 @@ function renderMarkdown(el, text) {
     a.target = "_blank";
     a.rel = "noopener noreferrer";
   }
+  const pres = el.querySelectorAll("pre");
+  const openPre = streaming && fenceOpen(text) ? pres[pres.length - 1] : null;
+  for (const code of el.querySelectorAll("pre code.language-mermaid")) {
+    const pre = code.parentElement;
+    pre.replaceWith(diagramCard(code.textContent.trim(), pre === openPre));
+  }
   for (const code of el.querySelectorAll("pre code")) {
+    if (code.closest("figure.diagram")) continue;
     const lang = code.className.replace("language-", "");
     if (hljs.getLanguage(lang))
       code.innerHTML = hljs.highlight(code.textContent, {
@@ -342,11 +536,12 @@ function assistantMessage(entry = { t: "assistant", text: "" }) {
   let frame = 0;
   const paint = () => {
     frame = 0;
-    renderMarkdown(body, latest);
+    renderMarkdown(body, latest, true);
   };
   const finish = () => {
     if (frame) cancelAnimationFrame(frame);
-    paint();
+    frame = 0;
+    renderMarkdown(body, latest);
     entry.text = latest;
     n.append(copyButton(() => latest, "copyResponse"));
   };

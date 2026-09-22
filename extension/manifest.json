@@ -3,7 +3,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "minimum_chrome_version": "120",
   "permissions": [
     "sidePanel",
@@ -34,7 +34,11 @@
   "side_panel": {
     "default_path": "panel.html"
   },
+  "sandbox": {
+    "pages": ["mermaid.html"]
+  },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src 'self' data:; style-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src 'self' data:; style-src 'self'",
+    "sandbox": "sandbox allow-scripts; script-src 'self'; object-src 'none'; connect-src 'none'; img-src data:; style-src 'self' 'unsafe-inline'; font-src 'none'"
   }
 }

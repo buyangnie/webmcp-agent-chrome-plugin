@@ -667,5 +667,47 @@
   },
   "argUnknown": {
     "message": "{0}: not an allowed parameter."
+  },
+  "diagram": {
+    "message": "Diagram"
+  },
+  "diagramDrawing": {
+    "message": "Drawing the diagram…"
+  },
+  "diagramFailed": {
+    "message": "This diagram couldn't be drawn, so its source is shown."
+  },
+  "diagramErrorDetails": {
+    "message": "Error details"
+  },
+  "showCode": {
+    "message": "Code"
+  },
+  "showDiagram": {
+    "message": "Diagram"
+  },
+  "downloadSvg": {
+    "message": "Download SVG"
+  },
+  "downloadPng": {
+    "message": "Download PNG"
+  },
+  "diagramPngFailed": {
+    "message": "This diagram can't be saved as PNG. Download the SVG instead."
+  },
+  "enlarge": {
+    "message": "Enlarge"
+  },
+  "zoomIn": {
+    "message": "Zoom in"
+  },
+  "zoomOut": {
+    "message": "Zoom out"
+  },
+  "zoomFit": {
+    "message": "Fit"
+  },
+  "closeDiagram": {
+    "message": "Close"
   }
 }

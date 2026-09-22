@@ -732,6 +732,104 @@ code {
   display: block;
   margin-left: auto;
 }
+.mermaid-frame {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  width: 1200px;
+  height: 900px;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+figure.diagram {
+  margin: 8px 0 12px;
+}
+.diagram-view {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  cursor: zoom-in;
+}
+.diagram-view img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+figure.diagram [hidden] {
+  display: none;
+}
+figure.diagram figcaption {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+figure.diagram .diagram-error {
+  color: var(--danger);
+}
+.diagram-error summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+.diagram-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+#diagramDialog {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+}
+#diagramDialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.diagram-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.diagram-bar .spacer {
+  flex: 1;
+}
+#zoomLevel {
+  min-width: 48px;
+  text-align: center;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.diagram-stage {
+  display: flex;
+  flex: 1;
+  padding: 16px;
+  overflow: auto;
+  cursor: grab;
+  touch-action: none;
+}
+.diagram-stage.dragging {
+  cursor: grabbing;
+}
+.diagram-stage img {
+  flex-shrink: 0;
+  margin: auto;
+  user-select: none;
+}
 .tool-card {
   margin: 0 0 12px;
   padding: 8px 12px;

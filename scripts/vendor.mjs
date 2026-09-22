@@ -8,6 +8,8 @@ for (const [a, b] of [
   ["dompurify/LICENSE", "dompurify-LICENSE"],
   ["dompurify/LICENSE-MPL", "dompurify-LICENSE-MPL"],
   ["highlight.js/LICENSE", "highlight-LICENSE"],
+  ["@mermaid-js/tiny/dist/mermaid.tiny.js", "mermaid.js"],
+  ["@mermaid-js/tiny/LICENSE", "mermaid-LICENSE"],
 ]) {
   if (b !== "unused")
     await copyFile("node_modules/" + a, "extension/vendor/" + b);

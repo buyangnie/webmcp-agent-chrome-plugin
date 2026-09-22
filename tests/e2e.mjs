@@ -73,7 +73,15 @@ try {
       if (body.tools?.some((t) => t.function.name === "load_skill"))
         sawSkillTool = true;
       let delta;
-      if (last.role === "user" && last.content.includes("[Skill: summarize]")) {
+      if (last.role === "user" && last.content === "Draw the flow") {
+        delta = {
+          content:
+            "```mermaid\nflowchart LR\n  A[Ask] --> B{Tools?}\n  B --> C[Answer]\n```\n\n```mermaid\nflowchart LR\n  A -->\n  ((broken\n```",
+        };
+      } else if (
+        last.role === "user" &&
+        last.content.includes("[Skill: summarize]")
+      ) {
         sawSkillBlock = true;
         delta = { content: "Summary done." };
       } else if (
@@ -289,6 +297,18 @@ try {
   await panel.locator("#prompt").fill("");
   assert.ok(await panel.locator("#modelLabel").isHidden());
 
+  await panel.locator("#prompt").fill("Draw the flow");
+  await panel.locator("#send").click();
+  await panel.locator("figure.diagram .diagram-view img").waitFor();
+  await panel.locator("figure.diagram .diagram-error").waitFor();
+  assert.match(
+    await panel.locator("figure.diagram .diagram-view img").getAttribute("src"),
+    /^data:image\/svg\+xml/,
+  );
+  await panel.locator("figure.diagram .diagram-view").click();
+  await panel.locator("#diagramDialog[open]").waitFor();
+  await panel.keyboard.press("Escape");
+
   assert.equal(await panel.locator("#inspect[hidden]").count(), 1);
   await panel.locator("#settings").click();
   await panel.locator("#tabDeveloper").click();
@@ -354,7 +374,7 @@ try {
 
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop, navigation, session restore, no-tools page, skills (slash, manual, auto, settings), inspector (diagnosis, lint, manual call, validation, approval, tab follow).",
+    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop, navigation, session restore, no-tools page, skills (slash, manual, auto, settings), inspector (diagnosis, lint, manual call, validation, approval, tab follow), Mermaid diagrams (render, fallback, enlarge).",
   );
   if (process.env.WEBMCP_TEST_KEY) {
     await panel.locator("#newSession").click();
