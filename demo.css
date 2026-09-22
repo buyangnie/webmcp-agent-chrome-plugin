@@ -1,0 +1,286 @@
+/* Shared visual language for the standalone WebMCP examples. */
+:root {
+  color-scheme: light dark;
+  --bg: #f8fafd;
+  --surface: #fff;
+  --text: #202124;
+  --muted: #5f6368;
+  --line: #dfe4eb;
+  --accent: #0b57d0;
+  --soft: #e8f0fe;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    14px/1.6 Arial,
+    sans-serif;
+}
+header {
+  max-width: 1440px;
+  margin: auto;
+  padding: 32px 28px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+header img {
+  width: 56px;
+  height: 56px;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+  margin: 0;
+}
+h2 {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+p {
+  margin: 6px 0;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+}
+header p:not(.eyebrow),
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+}
+.layout {
+  max-width: 1440px;
+  margin: auto;
+  padding: 18px 28px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.section-title span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.panel,
+.ticket {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+.info {
+  padding: 16px 20px;
+  background: var(--soft);
+  border-radius: 16px;
+  margin: 6px 0 18px;
+  font-size: 12px;
+}
+.ticket h3 {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 14px 0;
+}
+.ticket-top {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.chip {
+  font-size: 11px;
+  border-radius: 20px;
+  padding: 4px 10px;
+  background: var(--soft);
+  color: var(--accent);
+  display: inline-block;
+}
+.priority {
+  color: #b3261e;
+  background: #fce8e6;
+}
+.ticket dl {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 5px;
+  font-size: 12px;
+}
+.ticket dt {
+  color: var(--muted);
+}
+.ticket dd {
+  margin: 0;
+}
+.toolonly {
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.environment {
+  max-width: 1384px;
+  margin: auto;
+  padding: 0 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#mcpBanner {
+  background: var(--soft);
+  padding: 12px 28px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  border-bottom: 1px solid var(--line);
+}
+#mcpBanner.hot {
+  background: #e6f4ea;
+  color: #137333;
+}
+#mcpBannerTitle {
+  font-size: 12px;
+}
+#mcpBannerDetail {
+  flex-basis: 100%;
+}
+button {
+  border: 0;
+  border-radius: 24px;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 18px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+button.secondary {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--accent);
+}
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.row input {
+  flex: 1;
+  min-width: 160px;
+}
+input,
+select,
+textarea {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px;
+  font: inherit;
+  font-size: 13px;
+}
+select,
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 14px 0 6px;
+}
+pre {
+  font:
+    12px/1.7 Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 14px;
+  max-height: 380px;
+  overflow: auto;
+}
+details {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+summary {
+  cursor: pointer;
+  font-size: 13px;
+}
+.log-entry {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+  font-size: 12px;
+}
+.log-entry strong {
+  color: var(--accent);
+}
+a {
+  color: var(--accent);
+}
+iframe {
+  width: 100%;
+  height: 800px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+.client {
+  max-width: 1440px;
+  padding: 24px;
+  margin: auto;
+}
+button:focus-visible,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (max-width: 850px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+  header {
+    padding: 24px 16px;
+  }
+  .environment {
+    padding: 0 16px;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131314;
+    --surface: #1e1f20;
+    --text: #e3e3e3;
+    --muted: #a8abb0;
+    --line: #3c4043;
+    --accent: #a8c7fa;
+    --soft: #282e38;
+  }
+  button {
+    color: #062e6f;
+  }
+  #mcpBanner.hot {
+    background: #18392b;
+    color: #81c995;
+  }
+}

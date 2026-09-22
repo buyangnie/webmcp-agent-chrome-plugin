@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>External client · WebMCP Agent</title>
+    <link rel="stylesheet" href="demo.css" />
+  </head>
+  <body>
+    <header>
+      <img src="extension/icons/icon.svg" alt="" />
+      <div>
+        <p class="eyebrow">WEBMCP AGENT / EXAMPLE</p>
+        <h1>External client verification</h1>
+        <p>
+          Call the embedded page's tools and compare its banner receipt with the
+          result.
+        </p>
+      </div>
+    </header>
+    <main class="client">
+      <div class="info">
+        This parent document is an external caller relative to the iframe. A
+        matching receipt verifies execution; it does not identify a specific AI
+        product.
+      </div>
+      <div class="row">
+        <button id="list">Discover tools</button
+        ><button id="callList">List incidents</button
+        ><button id="callDetail">Get incident details</button
+        ><button id="callBad" class="secondary">Test invalid arguments</button>
+      </div>
+      <pre id="out">Wait for the embedded page to finish loading.</pre>
+      <iframe id="frame" src="index.html" title="WebMCP incident demo"></iframe>
+    </main>
+    <script>
+      "use strict";
+      const frame = document.getElementById("frame"),
+        out = document.getElementById("out");
+      const mc = () => frame.contentWindow.document.modelContext;
+      document.getElementById("list").onclick = async () => {
+        try {
+          out.textContent = JSON.stringify(
+            (await mc().getTools()).map((t) => ({
+              name: t.name,
+              description: t.description,
+              inputSchema: t.inputSchema,
+              annotations: t.annotations,
+              origin: t.origin,
+            })),
+            null,
+            2,
+          );
+        } catch (e) {
+          out.textContent = e.message;
+        }
+      };
+      async function call(name, args) {
+        try {
+          const tool = (await mc().getTools()).find((t) => t.name === name);
+          if (!tool) throw Error("Tool not registered");
+          out.textContent = await mc().executeTool(tool, JSON.stringify(args));
+        } catch (e) {
+          out.textContent = e.message;
+        }
+      }
+      document.getElementById("callList").onclick = () =>
+        call("list_tickets", { status: "open" });
+      document.getElementById("callDetail").onclick = () =>
+        call("get_ticket_detail", { ticketId: "INC-2026-0431" });
+      document.getElementById("callBad").onclick = () =>
+        call("get_ticket_detail", { ticketId: 42 });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "webmcp-agent-chrome-plugin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "vendor": "node scripts/vendor.mjs",
+    "test:e2e": "node tests/e2e.mjs"
+  },
+  "dependencies": {
+    "dompurify": "3.4.15",
+    "highlight.js": "11.11.1",
+    "marked": "18.0.14"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0",
+    "prettier": "3.6.2"
+  }
+}

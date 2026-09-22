@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WebMCP Agent</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <img src="icons/icon.svg" alt="" /><span>WebMCP <b>Agent</b></span>
+      </div>
+      <div class="actions">
+        <button
+          id="newSession"
+          class="icon"
+          title="New session"
+          aria-label="New session"
+        >
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg></button
+        ><button
+          id="settings"
+          class="icon"
+          title="Settings"
+          aria-label="Settings"
+        >
+          <svg viewBox="0 0 24 24">
+            <path
+              d="m9 4 .5-2h5l.5 2 2 1 2-.5 2.5 4-1.5 1.5v3l1.5 1.5-2.5 4-2-.5-2 1-.5 2h-5L9 19l-2-1-2 .5-2.5-4L4 13v-3L2.5 8.5l2.5-4 2 .5z"
+            />
+            <circle cx="12" cy="11.5" r="3" />
+          </svg>
+        </button>
+      </div>
+    </header>
+    <section class="connection" aria-label="Connected page">
+      <div class="connection-top">
+        <span id="dot" class="dot"></span
+        ><strong id="pageTitle">Connecting to this tab…</strong
+        ><button
+          id="refresh"
+          class="icon"
+          title="Refresh tools"
+          aria-label="Refresh tools"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M20 7v5h-5M20 12a8 8 0 1 0-2.5 5.8" />
+          </svg>
+        </button>
+      </div>
+      <div class="connection-bottom">
+        <span id="pageHost">Current tab</span
+        ><button id="toolsButton" class="pill">0 tools</button>
+      </div>
+      <p id="connectionError" hidden></p>
+    </section>
+    <main id="messages" aria-label="Conversation">
+      <section id="welcome">
+        <img class="hero-icon" src="icons/icon.svg" alt="" />
+        <h1>A little help.<br />A lot more done.</h1>
+        <p>
+          Talk to your page. Explore its tools.<br />Turn a request into a
+          completed task.
+        </p>
+        <div class="suggestions">
+          <button
+            data-prompt="What tools are available on this page, and what does each one do?"
+          >
+            <svg viewBox="0 0 24 24"><path d="m9 5-6 7 6 7m6-14 6 7-6 7" /></svg
+            ><span>Explore page tools</span
+            ><span class="arrow">↗</span></button
+          ><button
+            data-prompt="Based on the available page tools, suggest useful tasks you can help me complete."
+          >
+            <svg viewBox="0 0 24 24">
+              <path
+                d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4z"
+              /></svg
+            ><span>Help me get started</span><span class="arrow">↗</span>
+          </button>
+        </div>
+        <small>You're in control. Approve changes before they run.</small>
+      </section>
+    </main>
+    <footer>
+      <div id="runStatus" role="status">Ready when you are</div>
+      <div class="composer">
+        <textarea
+          id="prompt"
+          rows="2"
+          placeholder="Ask about this page"
+          aria-label="Message"
+        ></textarea>
+        <div class="composer-bottom">
+          <span id="modelLabel">Connect a model to get started</span
+          ><button id="send" class="send" title="Send" aria-label="Send">
+            ↑
+          </button>
+        </div>
+      </div>
+      <div class="footnote">
+        One session at a time. Review important actions.
+      </div>
+    </footer>
+    <dialog id="settingsDialog" aria-labelledby="settingsTitle">
+      <form id="configForm">
+        <div class="dialog-head">
+          <div>
+            <div class="eyebrow">MAKE IT YOURS</div>
+            <h2 id="settingsTitle">Settings</h2>
+            <p>Your model. Your instructions.</p>
+          </div>
+          <button type="button" class="icon close" aria-label="Close settings">
+            <svg viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" /></svg>
+          </button>
+        </div>
+        <section class="settings-section">
+          <h3>Model connection</h3>
+          <p class="section-description">
+            Connect any OpenAI-compatible Chat Completions endpoint.
+          </p>
+          <label for="baseUrl">Base URL</label
+          ><input
+            id="baseUrl"
+            type="url"
+            required
+            placeholder="https://api.deepseek.com"
+            spellcheck="false"
+          /><label for="apiKey">API key</label>
+          <div class="key-row">
+            <input
+              id="apiKey"
+              type="password"
+              autocomplete="off"
+              required
+              placeholder="Enter your API key"
+              spellcheck="false"
+            /><button id="showKey" type="button" class="secondary">Show</button>
+          </div>
+          <label class="check"
+            ><input id="saveKey" type="checkbox" /><span
+              >Remember key on this device<small
+                >Otherwise, it stays in memory until Chrome closes.</small
+              ></span
+            ></label
+          ><label for="model">Model name</label
+          ><input
+            id="model"
+            required
+            placeholder="deepseek-flash"
+            spellcheck="false"
+          />
+        </section>
+        <section class="settings-section">
+          <div class="section-heading">
+            <h3>Instructions</h3>
+            <button id="resetPrompt" type="button" class="text-button">
+              Reset to default
+            </button>
+          </div>
+          <label class="sr-only" for="systemPrompt">System prompt</label
+          ><textarea id="systemPrompt" rows="6" spellcheck="false"></textarea>
+          <p class="hint">
+            Set the assistant's role and response style. Changes apply to a new
+            session.
+          </p>
+        </section>
+        <div class="privacy-note">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6zM9 12l2 2 4-4" />
+          </svg>
+          <p>
+            Conversations, page details, and tool results go to your model
+            provider. Your API key is never shared with webpages.
+          </p>
+        </div>
+        <div id="testResult" role="status"></div>
+        <div class="dialog-actions">
+          <button id="testConnection" type="button" class="secondary">
+            Test connection</button
+          ><button class="primary" type="submit">Save changes</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="toolsDialog" aria-labelledby="toolsTitle">
+      <div class="dialog-head">
+        <div>
+          <div class="eyebrow">CONNECTED TO YOUR PAGE</div>
+          <h2 id="toolsTitle">Available tools</h2>
+          <p id="toolsSubtitle"></p>
+        </div>
+        <button class="icon close" aria-label="Close tools">
+          <svg viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" /></svg>
+        </button>
+      </div>
+      <div id="toolsList"></div>
+    </dialog>
+    <script type="module" src="panel.js"></script>
+  </body>
+</html>
