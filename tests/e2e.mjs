@@ -60,6 +60,8 @@ try {
     .click();
   let requests = 0;
   let sawPageText = false;
+  let sawSkillBlock = false;
+  let sawSkillTool = false;
   await context.route(
     "https://mock.invalid/v1/chat/completions",
     async (route) => {
@@ -68,8 +70,30 @@ try {
       if (body.messages[0].content.includes("\nPage content (untrusted"))
         sawPageText = true;
       const last = body.messages.at(-1);
+      if (body.tools?.some((t) => t.function.name === "load_skill"))
+        sawSkillTool = true;
       let delta;
-      if (last.role === "tool") {
+      if (last.role === "user" && last.content.includes("[Skill: summarize]")) {
+        sawSkillBlock = true;
+        delta = { content: "Summary done." };
+      } else if (
+        last.role === "user" &&
+        last.content.includes("automatically")
+      ) {
+        delta = {
+          tool_calls: [
+            {
+              index: 0,
+              id: "skill-" + requests,
+              type: "function",
+              function: {
+                name: "load_skill",
+                arguments: JSON.stringify({ name: "summarize" }),
+              },
+            },
+          ],
+        };
+      } else if (last.role === "tool") {
         delta = {
           content:
             '## Results\n\nTicket details retrieved.\n\n| Field | Result |\n|---|---|\n| Status | Read |\n\n```json\n{"ok": true}\n```\n\n<img src=x onerror="alert(1)">',
@@ -205,9 +229,69 @@ try {
   assert.equal(await panel.locator("#dot.tools").count(), 0);
   assert.equal(await panel.locator("#attachments .chip").count(), 1);
   assert.ok(sawPageText, "page text should reach the model");
+
+  const done = () =>
+    panel.waitForFunction(
+      () => document.getElementById("runStatus").textContent === "Completed",
+    );
+  await panel.locator("#newSession").click();
+  assert.equal(await panel.locator("#skillSuggestions button").count(), 3);
+  await panel.locator("#prompt").fill("/sum");
+  await panel.locator(".slash-item").first().waitFor();
+  assert.equal(
+    await panel.locator(".slash-item strong").first().textContent(),
+    "/summarize",
+  );
+  await panel.keyboard.press("Enter");
+  assert.equal(
+    await panel.locator("#attachments .chip.skill").textContent(),
+    "/summarize",
+  );
+  assert.equal(await panel.locator("#prompt").inputValue(), "");
+  await panel.locator("#prompt").fill("focus on pricing");
+  await panel.locator("#send").click();
+  await panel.getByText("Summary done.").waitFor();
+  await done();
+  assert.ok(sawSkillBlock, "manual skill instructions should reach the model");
+  assert.equal(await panel.locator(".skill-tag").textContent(), "/summarize");
+  assert.equal(await panel.locator("#attachments .chip.skill").count(), 0);
+
+  await panel.locator("#prompt").fill("Pick a skill automatically");
+  await panel.locator("#send").click();
+  await panel.locator(".skill-used").waitFor();
+  await panel.locator("#messages .body table").waitFor();
+  await done();
+  assert.ok(sawSkillTool, "auto skills should be offered as load_skill");
+  assert.equal(await panel.locator(".skill-used").count(), 1);
+  assert.equal(await panel.locator(".tool-card").count(), 0);
+
+  await panel.locator("#settings").click();
+  await panel.locator("#tabSkills").click();
+  assert.equal(await panel.locator(".skill-item").count(), 3);
+  await panel.locator("#newSkill").click();
+  await panel.locator("#skillName").fill("summarize");
+  await panel.locator("#skillDescription").fill("Duplicate");
+  await panel.locator("#skillInstructions").fill("Nope");
+  await panel.locator("#saveSkill").click();
+  assert.match(await panel.locator("#skillError").textContent(), /already/);
+  await panel.locator("#skillName").fill("/e2e-check");
+  await panel.locator("#saveSkill").click();
+  await panel.locator(".skill-item").nth(3).waitFor();
+  assert.equal(await panel.locator(".skill-item").count(), 4);
+  await panel.keyboard.press("Escape");
+  await panel.locator("#prompt").fill("/e2e");
+  assert.equal(
+    await panel.locator(".slash-item strong").first().textContent(),
+    "/e2e-check",
+  );
+  await panel.keyboard.press("Escape");
+  assert.ok(await panel.locator("#slashMenu").isHidden());
+  await panel.locator("#prompt").fill("");
+  assert.ok(await panel.locator("#modelLabel").isHidden());
+
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop, navigation, session restore, no-tools page.",
+    "PASS: discovery, streamed chat, read tool, Markdown sanitization, write confirmation/rejection, write execution, new session, stop, navigation, session restore, no-tools page, skills (slash, manual, auto, settings).",
   );
   if (process.env.WEBMCP_TEST_KEY) {
     await panel.locator("#newSession").click();

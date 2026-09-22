@@ -1,72 +1,169 @@
 {
-  "extName": { "message": "WebMCP Agent" },
+  "extName": {
+    "message": "WebMCP Agent"
+  },
   "extDescription": {
     "message": "A browser assistant that reads the current page, takes files and images, and uses the page's WebMCP tools with your own model."
   },
-  "actionTitle": { "message": "Open WebMCP Agent" },
-  "connecting": { "message": "Connecting to this tab…" },
-  "cantAccess": { "message": "Can't access this page" },
-  "untitled": { "message": "Untitled page" },
-  "toolsCount": { "message": "{0} tools" },
-  "toolsOne": { "message": "1 tool" },
-  "availableTools": { "message": "Available tools" },
-  "refreshTools": { "message": "Refresh tools" },
-  "newSession": { "message": "New session" },
-  "popOut": { "message": "Open in a floating window" },
-  "dock": { "message": "Move back to the side panel" },
-  "settings": { "message": "Settings" },
-  "welcomeTitle": { "message": "Ask about this page" },
+  "actionTitle": {
+    "message": "Open WebMCP Agent"
+  },
+  "connecting": {
+    "message": "Connecting to this tab…"
+  },
+  "untitled": {
+    "message": "Untitled page"
+  },
+  "toolsCount": {
+    "message": "{0} tools"
+  },
+  "toolsOne": {
+    "message": "1 tool"
+  },
+  "availableTools": {
+    "message": "Available tools"
+  },
+  "refreshTools": {
+    "message": "Refresh tools"
+  },
+  "newSession": {
+    "message": "New session"
+  },
+  "popOut": {
+    "message": "Open in a floating window"
+  },
+  "dock": {
+    "message": "Move back to the side panel"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "welcomeTitle": {
+    "message": "Ask about this page"
+  },
   "welcomeBody": {
     "message": "I can read what's on this page, look at files and images you attach, and use tools the page provides. You approve page changes before they run."
   },
-  "suggestSummarize": { "message": "Summarize this page" },
-  "promptSummarize": { "message": "Summarize this page in a few key points." },
-  "suggestCapabilities": { "message": "What can you do here?" },
-  "promptCapabilities": {
-    "message": "What can you help me do on this page? Include any tools it provides."
+  "placeholder": {
+    "message": "Ask about this page"
   },
-  "placeholder": { "message": "Ask about this page" },
-  "addFiles": { "message": "Add files" },
-  "connectModel": { "message": "Connect a model to get started" },
-  "send": { "message": "Send" },
-  "stop": { "message": "Stop generating" },
-  "removePage": { "message": "Remove page context" },
-  "removeFile": { "message": "Remove {0}" },
-  "pastedImage": { "message": "Pasted image" },
-  "pastedImageN": { "message": "Pasted image {0}" },
-  "tooManyImages": { "message": "You can attach up to 4 images." },
-  "tooManyTexts": { "message": "You can attach up to 4 text files." },
-  "imageTooLarge": { "message": "{0} is larger than 20 MB." },
-  "textTooLarge": { "message": "{0} is larger than 100 KB." },
-  "unsupportedFile": { "message": "{0} is not supported." },
-  "imageUnreadable": { "message": "{0} could not be read as an image." },
-  "copyCode": { "message": "Copy code" },
-  "copyResponse": { "message": "Copy response" },
-  "copied": { "message": "Copied" },
+  "addFiles": {
+    "message": "Add files"
+  },
+  "connectModel": {
+    "message": "Connect a model to get started"
+  },
+  "send": {
+    "message": "Send"
+  },
+  "stop": {
+    "message": "Stop generating"
+  },
+  "removePage": {
+    "message": "Remove page context"
+  },
+  "removeFile": {
+    "message": "Remove {0}"
+  },
+  "pastedImage": {
+    "message": "Pasted image"
+  },
+  "pastedImageN": {
+    "message": "Pasted image {0}"
+  },
+  "tooManyImages": {
+    "message": "You can attach up to 4 images."
+  },
+  "tooManyTexts": {
+    "message": "You can attach up to 4 text files."
+  },
+  "imageTooLarge": {
+    "message": "{0} is larger than 20 MB."
+  },
+  "textTooLarge": {
+    "message": "{0} is larger than 100 KB."
+  },
+  "unsupportedFile": {
+    "message": "{0} is not supported."
+  },
+  "imageUnreadable": {
+    "message": "{0} could not be read as an image."
+  },
+  "copyCode": {
+    "message": "Copy code"
+  },
+  "copyResponse": {
+    "message": "Copy response"
+  },
+  "copied": {
+    "message": "Copied"
+  },
   "copyFailed": {
     "message": "Could not copy. Select the text to copy it manually."
   },
-  "thinking": { "message": "Thinking" },
-  "toolPreparing": { "message": "Preparing" },
-  "toolRunning": { "message": "Running…" },
-  "toolCompleted": { "message": "Completed" },
-  "toolFailed": { "message": "Not executed / failed" },
-  "toolInterrupted": { "message": "Interrupted" },
-  "approvalRequired": { "message": "Approval required" },
-  "approvalNote": { "message": "This runs on {0}." },
-  "allow": { "message": "Allow" },
-  "decline": { "message": "Decline" },
-  "readOnly": { "message": "Read-only" },
-  "statusWorking": { "message": "Working on your request…" },
-  "statusWorkingResults": { "message": "Working with the results…" },
-  "statusCompleted": { "message": "Completed" },
-  "statusWaiting": { "message": "Waiting for approval: {0}" },
-  "statusCalling": { "message": "Calling {0}…" },
-  "statusStepLimit": { "message": "Step limit reached" },
-  "statusStopped": { "message": "Stopped" },
-  "statusFailed": { "message": "Request failed" },
-  "statusNewSession": { "message": "New session started" },
-  "statusSettingsSaved": { "message": "Settings saved" },
+  "thinking": {
+    "message": "Thinking"
+  },
+  "toolPreparing": {
+    "message": "Preparing"
+  },
+  "toolRunning": {
+    "message": "Running…"
+  },
+  "toolCompleted": {
+    "message": "Completed"
+  },
+  "toolFailed": {
+    "message": "Not executed / failed"
+  },
+  "toolInterrupted": {
+    "message": "Interrupted"
+  },
+  "approvalRequired": {
+    "message": "Approval required"
+  },
+  "approvalNote": {
+    "message": "This runs on {0}."
+  },
+  "allow": {
+    "message": "Allow"
+  },
+  "decline": {
+    "message": "Decline"
+  },
+  "readOnly": {
+    "message": "Read-only"
+  },
+  "statusWorking": {
+    "message": "Working on your request…"
+  },
+  "statusWorkingResults": {
+    "message": "Working with the results…"
+  },
+  "statusCompleted": {
+    "message": "Completed"
+  },
+  "statusWaiting": {
+    "message": "Waiting for approval: {0}"
+  },
+  "statusCalling": {
+    "message": "Calling {0}…"
+  },
+  "statusStepLimit": {
+    "message": "Step limit reached"
+  },
+  "statusStopped": {
+    "message": "Stopped"
+  },
+  "statusFailed": {
+    "message": "Request failed"
+  },
+  "statusNewSession": {
+    "message": "New session started"
+  },
+  "statusSettingsSaved": {
+    "message": "Settings saved"
+  },
   "statusSettingsSavedNext": {
     "message": "Settings saved. Start a new session to apply them."
   },
@@ -76,62 +173,220 @@
   "noticeStopped": {
     "message": "Stopped. Completed page actions have not been undone."
   },
-  "noticeEmpty": { "message": "The model returned an empty response." },
+  "noticeEmpty": {
+    "message": "The model returned an empty response."
+  },
   "noticePageUnread": {
     "message": "Could not read the page. Sent without page content."
   },
   "noticeTooLarge": {
     "message": "This conversation is too large to keep. It will reset when the panel closes."
   },
-  "noticeFloatFailed": { "message": "Could not open a floating window." },
-  "retry": { "message": "Retry with existing results" },
-  "nowOn": { "message": "Now on: {0}" },
-  "toolsNone": {
-    "message": "This page doesn't provide WebMCP tools. You can still ask about its content."
+  "noticeFloatFailed": {
+    "message": "Could not open a floating window."
   },
-  "toolsUnavailable": {
-    "message": "WebMCP isn't enabled in this browser. You can still ask about the page content."
+  "retry": {
+    "message": "Retry with existing results"
+  },
+  "nowOn": {
+    "message": "Now on: {0}"
+  },
+  "toolsNone": {
+    "message": "No WebMCP tools are available on this page."
   },
   "toolsCantAccess": {
-    "message": "Chrome doesn't let extensions read this page."
+    "message": "Chrome doesn't let extensions read this kind of page."
   },
-  "toolsMode": { "message": "{0} · Current main document" },
-  "settingsSubtitle": { "message": "Your model and instructions." },
-  "closeSettings": { "message": "Close settings" },
-  "closeTools": { "message": "Close tools" },
-  "modelConnection": { "message": "Model connection" },
+  "toolsMode": {
+    "message": "{0} · Current main document"
+  },
+  "settingsSubtitle": {
+    "message": "Your model, instructions, and skills."
+  },
+  "closeSettings": {
+    "message": "Close settings"
+  },
+  "closeTools": {
+    "message": "Close tools"
+  },
+  "modelConnection": {
+    "message": "Model connection"
+  },
   "modelConnectionHint": {
     "message": "Connect any OpenAI-compatible Chat Completions endpoint."
   },
-  "baseUrl": { "message": "Base URL" },
-  "apiKey": { "message": "API key" },
-  "apiKeyPlaceholder": { "message": "Enter your API key" },
-  "show": { "message": "Show" },
-  "hide": { "message": "Hide" },
-  "rememberKey": { "message": "Remember key on this device" },
+  "baseUrl": {
+    "message": "Base URL"
+  },
+  "apiKey": {
+    "message": "API key"
+  },
+  "apiKeyPlaceholder": {
+    "message": "Enter your API key"
+  },
+  "show": {
+    "message": "Show"
+  },
+  "hide": {
+    "message": "Hide"
+  },
+  "rememberKey": {
+    "message": "Remember key on this device"
+  },
   "rememberKeyHint": {
     "message": "Otherwise, it stays in memory until Chrome closes."
   },
-  "modelName": { "message": "Model name" },
-  "instructions": { "message": "Instructions" },
-  "resetDefault": { "message": "Reset to default" },
-  "systemPrompt": { "message": "System prompt" },
+  "modelName": {
+    "message": "Model name"
+  },
+  "instructions": {
+    "message": "Instructions"
+  },
+  "resetDefault": {
+    "message": "Reset to default"
+  },
+  "systemPrompt": {
+    "message": "System prompt"
+  },
   "instructionsHint": {
     "message": "Set the assistant's role and response style. Changes apply to a new session."
   },
   "privacyNote": {
     "message": "Conversations, page content, attachments, and tool results go to your model provider. Your API key is never shared with webpages."
   },
-  "testConnection": { "message": "Test connection" },
-  "saveChanges": { "message": "Save changes" },
-  "testStreaming": { "message": "Testing streaming responses…" },
-  "testToolCalling": { "message": "Streaming passed. Testing tool calling…" },
+  "testConnection": {
+    "message": "Test connection"
+  },
+  "saveChanges": {
+    "message": "Save changes"
+  },
+  "testStreaming": {
+    "message": "Testing streaming responses…"
+  },
+  "testToolCalling": {
+    "message": "Streaming passed. Testing tool calling…"
+  },
   "testPassed": {
     "message": "✓ Streaming passed\n✓ Tool calling passed (no page tools executed)"
   },
   "testNoTools": {
     "message": "✓ Streaming passed\n! This model didn't return a tool call. Chat and page content work, but page tools won't."
   },
-  "testFailed": { "message": "Test failed: {0}" },
-  "enterModelKey": { "message": "Enter a model name and API key" }
+  "testFailed": {
+    "message": "Test failed: {0}"
+  },
+  "enterModelKey": {
+    "message": "Enter a model name and API key"
+  },
+  "tabModel": {
+    "message": "Model"
+  },
+  "tabSkills": {
+    "message": "Skills"
+  },
+  "skillsHint": {
+    "message": "Type / in the message box to use a skill. The model can also use skills marked Auto when they fit a request."
+  },
+  "newSkill": {
+    "message": "New skill"
+  },
+  "importSkill": {
+    "message": "Import SKILL.md"
+  },
+  "skillsEmpty": {
+    "message": "No skills yet."
+  },
+  "skillName": {
+    "message": "Name (slash command)"
+  },
+  "skillDescription": {
+    "message": "Description"
+  },
+  "skillDescriptionHint": {
+    "message": "One sentence. The model uses it to decide when the skill fits."
+  },
+  "skillInstructions": {
+    "message": "Instructions"
+  },
+  "skillAuto": {
+    "message": "Let the model use this skill automatically"
+  },
+  "skillAutoBadge": {
+    "message": "Auto"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "confirmDelete": {
+    "message": "Click again to delete"
+  },
+  "export": {
+    "message": "Export"
+  },
+  "skillNameInvalid": {
+    "message": "Enter a name without spaces, up to 40 characters."
+  },
+  "skillNameTaken": {
+    "message": "Another skill already uses this name."
+  },
+  "skillDescriptionInvalid": {
+    "message": "Enter a description of up to 200 characters."
+  },
+  "skillInstructionsInvalid": {
+    "message": "Enter instructions of up to 20,000 characters."
+  },
+  "skillLimit": {
+    "message": "You can save up to 50 skills."
+  },
+  "skillImported": {
+    "message": "Imported {0}. Only its name, description, and instructions were imported; scripts or other files a SKILL.md refers to are not."
+  },
+  "skillImportFailed": {
+    "message": "{0} could not be imported."
+  },
+  "slashNoMatch": {
+    "message": "No matching skill"
+  },
+  "slashNone": {
+    "message": "No skills yet. Add one in Settings."
+  },
+  "removeSkill": {
+    "message": "Remove skill"
+  },
+  "skillUsed": {
+    "message": "Used skill: {0}"
+  },
+  "builtinSummarizeName": {
+    "message": "summarize"
+  },
+  "builtinSummarizeDesc": {
+    "message": "Summarize the current page in a few key points."
+  },
+  "builtinSummarizeBody": {
+    "message": "Summarize the current page for the user.\n- Start with one sentence on what the page is about.\n- Then list 3 to 7 key points, most important first.\n- Keep numbers, names, dates, and conclusions exact.\n- If the user names a focus, summarize with that focus.\n- If the page content is missing or too short, say so instead of guessing."
+  },
+  "builtinTranslateName": {
+    "message": "translate"
+  },
+  "builtinTranslateDesc": {
+    "message": "Translate the current page or the text the user gives."
+  },
+  "builtinTranslateBody": {
+    "message": "Translate for the user.\n- If the user gives text, translate that. Otherwise translate the main content of the current page, skipping navigation, ads, and boilerplate.\n- Translate into the language the user names. If none is named, translate into English; if the source is already English, ask which language to use.\n- Keep the structure: headings, lists, tables, and code blocks. Do not translate code, URLs, or product names.\n- Output only the translation, without commentary."
+  },
+  "builtinTableName": {
+    "message": "extract-table"
+  },
+  "builtinTableDesc": {
+    "message": "Pull structured data from the current page into a table."
+  },
+  "builtinTableBody": {
+    "message": "Extract structured data from the current page into a Markdown table.\n- Find the main repeated items on the page, such as list rows, table rows, or cards, and choose clear column names.\n- If the user names the fields, use exactly those columns.\n- Keep values exactly as shown and leave a cell empty when a value is missing. Do not invent data.\n- After the table, say in one line how many rows were found and what, if anything, was left out."
+  }
 }

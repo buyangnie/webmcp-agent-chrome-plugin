@@ -14,9 +14,20 @@ Default Base URL: `https://api.deepseek.com`. Default model: `deepseek-flash`. T
 
 ## Interface
 
-- The header shows the current page, its tool count, and actions for a new session, the floating window, and settings. A green dot means the page provides tools. Pages without tools are a normal state and show `0 tools`.
+- The header shows the current page's title, its tool count, and actions for a new session, the floating window, and settings. A green dot means the page provides tools. Pages without tools are a normal state and show `0 tools`; the tools list says "No WebMCP tools are available on this page", and only pages Chrome forbids add that they can't be read.
 - The interface follows Chrome's language: Simplified Chinese for `zh-CN`, English otherwise. It follows Chrome's light or dark theme, and the toolbar icon switches with it.
-- **Floating window** moves the conversation into a separate, resizable window that follows whichever browser window you used last. **Move back to the side panel** returns it. Only one of the two is open at a time; opening the side panel closes the floating window and takes over its conversation.
+- Until a model is configured, the composer shows **Connect a model to get started**, which opens Settings. The model name is not shown otherwise.
+- **Floating window** moves the conversation into a separate, resizable window that follows whichever browser window you used last. **Move back to the side panel** returns it. Only one of the two is open at a time; opening the side panel closes the floating window and takes over its conversation. The floating window opens in front, but it is a normal window: clicking the browser window brings that to the front. Chrome does not let a side panel open an always-on-top (Document Picture-in-Picture) window.
+
+## Skills
+
+A skill is saved instructions for a recurring task. Three are preinstalled in the UI language (summarize, translate, extract a table); they can be edited or deleted.
+
+- Type `/` in the message box to pick one. It appears as a chip; send with or without extra text. Backspace in an empty box removes it. The welcome screen shows the first three skills as one-click buttons.
+- Skills marked **Auto** are listed to the model by name and description. The model can load one with the built-in `load_skill` tool; the conversation then shows "Used skill: …". Loading a skill needs no approval, because it only reads your own saved text.
+- Manage skills under **Settings → Skills**: up to 50 skills, names without spaces (up to 40 characters), descriptions up to 200 characters, instructions up to 20,000.
+- **Import SKILL.md** reads the `name` and `description` frontmatter and the body of Claude-style skill files. Scripts or other files a skill refers to are not imported. **Export** writes the same format.
+- Skills are stored in `chrome.storage.local` on this device and are not synced.
 
 ## Conversation
 
@@ -38,13 +49,13 @@ Tools are discovered from the active main document when the tab changes, finishe
 
 Navigating keeps the conversation. A "Now on" divider marks the page change, and later messages use the new page and its tools. Earlier tool calls for tools the new page lacks are sent to the model as plain text.
 
-The adapter supports `document.modelContext.getTools/executeTool` and includes a compatibility path for `navigator.modelContextTesting`. It does not scan iframe documents. Native WebMCP may require an experimental browser flag, origin isolation, and the appropriate permissions policy. Chrome's internal pages and the Web Store cannot be read; the header shows "Can't access this page". For file URLs, enable **Allow access to file URLs** in the extension details.
+The adapter supports `document.modelContext.getTools/executeTool` and includes a compatibility path for `navigator.modelContextTesting`. It does not scan iframe documents. Native WebMCP may require an experimental browser flag, origin isolation, and the appropriate permissions policy. Chrome's internal pages and the Web Store cannot be read; they show `0 tools`, and the tools list explains why. For file URLs, enable **Allow access to file URLs** in the extension details.
 
 ## Privacy and storage
 
 See [PRIVACY.md](../PRIVACY.md). In short: messages, the page's title, URL, and visible text, attachments, tool definitions, and tool results go only to the model endpoint you configure. API keys are never passed into webpages.
 
-By default the key stays in Chrome session storage until the browser closes. **Remember key on this device** stores it in local extension storage, which is not an OS-encrypted credential vault. Conversations are kept in session storage and cleared when Chrome closes. Chrome sync is not used.
+By default the key stays in Chrome session storage until the browser closes. **Remember key on this device** stores it in local extension storage, which is not an OS-encrypted credential vault. Conversations are kept in session storage and cleared when Chrome closes. Skills are kept in local extension storage. Chrome sync is not used.
 
 ## Development
 

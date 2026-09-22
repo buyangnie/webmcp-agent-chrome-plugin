@@ -1,7 +1,7 @@
 # WebMCP Agent — Engineering Handoff
 
 Last updated: 2026-09-22  
-Current release: **0.4.0**  
+Current release: **0.5.0**  
 Repository: <https://github.com/buyangnie/webmcp-agent-chrome-plugin> (public, branch `main`)  
 Workspace: `D:\_Working_Space\04. GTS - MS\Code\itsm-WebMCP`
 
@@ -9,7 +9,7 @@ Workspace: `D:\_Working_Space\04. GTS - MS\Code\itsm-WebMCP`
 
 The project contains a working, general-purpose Chrome side-panel agent and a separate ITSM WebMCP example. The extension discovers tools exposed by the selected webpage, supplies their schemas to an OpenAI-compatible model, executes model-requested calls, and returns their results to the conversation.
 
-Version 0.4.0 is implemented and packaged in `dist/webmcp-agent-0.4.0.zip`. The source directory `extension/` can be loaded directly without a build step. Since 0.2 the extension gained page-text context, file and image attachments (0.3), then a floating window, session persistence, continuing across navigation, event-driven discovery, a dark-grey palette with a line icon that follows Chrome's theme, and English/Simplified Chinese UI (0.4). Unit tests, the native-browser integration test, and responsive visual checks passed for 0.4.0; the live DeepSeek run was not repeated.
+Version 0.5.0 is implemented and packaged in `dist/webmcp-agent-0.5.0.zip`. The source directory `extension/` can be loaded directly without a build step. Since 0.2 the extension gained page-text context, file and image attachments (0.3), then a floating window, session persistence, continuing across navigation, event-driven discovery, a dark-grey palette with a line icon that follows Chrome's theme, and English/Simplified Chinese UI (0.4), then skills, a front-most floating window, real titles on pages without tools, and a hidden model label (0.5). Unit tests, the native-browser integration test, and visual checks passed for 0.5.0; the live DeepSeek run was not repeated.
 
 The most recent user requirements are complete. There is no additional feature request pending at handoff. Future work listed below is advisory, not approved scope.
 
@@ -20,7 +20,9 @@ The most recent user requirements are complete. There is no additional feature r
 - Chrome side-panel experience that blends with Chrome's own UI: neutral surfaces, dark-grey primary buttons (light grey in dark mode), and a single-color agent-bubble line icon. The product is independent of Google.
 - Works without page tools: page text, attachments, and chat are the baseline; WebMCP tools are an addition. A page with no tools is a normal state, not an error.
 - UI strings live in `extension/_locales` (English default, Simplified Chinese). Source comments, documentation, and bundled example content are English.
-- Configurable OpenAI-compatible Base URL, API key, model name, and system prompt.
+- Configurable OpenAI-compatible Base URL, API key, model name, and system prompt. The model name is not displayed; the composer shows "Connect a model to get started" only while no key is configured.
+- User-defined skills: picked with `/`, or loaded by the model through `load_skill` when marked Auto; managed in Settings; `SKILL.md` import/export. Three localized built-ins are seeded once and are ordinary, deletable skills.
+- A page without tools shows its real title and `0 tools`. "Can't read" wording appears only in the tools list, only for pages Chrome forbids.
 - Streaming responses, sanitized Markdown, tables, highlighted code, and copy actions.
 - Automatic tool discovery and multi-step tool calling, with visible execution cards.
 - Confirmation before consequential or insufficiently classified tool operations.
@@ -52,12 +54,14 @@ Treat observations about Google's client as historical, version-specific evidenc
 | `extension/panel.js`                | Conversation state, settings, prompt migration, discovery refresh, agent loop, confirmations, and rendering           |
 | `extension/core.js`                 | Default prompt, endpoint normalization, SSE parsing, streamed tool-call assembly, schema aliases, confirmation policy |
 | `extension/bridge.js`               | Main-world tool discovery/execution, document binding, definition checks, cancellation                                |
+| `extension/skills.js`               | Skill limits, `SKILL.md` parse/export, validation, slash matching, the `load_skill` tool and model catalog            |
 | `extension/icons/`                  | Original SVG and generated 16/32/48/128-pixel PNG icons                                                               |
 | `extension/vendor/`                 | Packaged Markdown, HTML sanitization, syntax-highlighting libraries, and licenses                                     |
 | `index.html`, `demo.js`, `demo.css` | Standalone ITSM example with three tools and external-call evidence                                                   |
 | `client.html`                       | Parent-document client calling the embedded example as an external caller                                             |
 | `serve.py`                          | Static server adding `Origin-Agent-Cluster: ?1`                                                                       |
 | `tests/core.test.mjs`               | Protocol and confirmation-policy tests                                                                                |
+| `tests/skills.test.mjs`             | `SKILL.md` parsing/export, validation, matching, and `load_skill` exposure                                            |
 | `tests/e2e.mjs`                     | Extension/native-page integration with deterministic model responses; optional live model verification                |
 | `scripts/preview.mjs`               | UI-only visual checks with a mocked Chrome API; not evidence of real tool execution                                   |
 | `scripts/icons.mjs`                 | SVG-to-PNG icon generation using headless Chrome                                                                      |
@@ -87,14 +91,21 @@ Model requests run in the extension page, not in the target webpage. The backgro
 ### Sessions and the floating window
 
 - Each surface saves `{ history, transcript, contextKey, attachPage, sessionConfig }` to `chrome.storage.session` under `chat:<windowId>` (side panel) or `chat:float`. The API key is stripped from the saved `sessionConfig`. `transcript` is a list of display entries (user, assistant, tool, notice, divider) replayed on load; in-flight tool states restore as "Interrupted".
-- Pop-out copies the side panel's session to `chat:float`, opens a `popup` window, records its id as `floatWindow`, and closes the side panel. The float follows the last focused normal browser window.
+- Pop-out copies the side panel's session to `chat:float` and sends `pop-out` to the service worker, which opens the `popup` window, records its id as `floatWindow`, closes the side panel, and then focuses the float twice (100 and 400 ms) because closing the panel returns focus to the browser window. The float also focuses itself once on load. It follows the last focused normal browser window. It is not always-on-top.
+- Document Picture-in-Picture was evaluated for always-on-top: it works from an extension tab or popup, but `requestWindow()` from the real side panel never settles and freezes the panel (Chromium, 2026-09). A viable variant would open PiP from the float window after a second click, with the float minimized as its owner; not implemented.
 - Any side panel that loads while `floatWindow` or `chat:float` exists closes the float and adopts its session. Docking calls `chrome.sidePanel.open` inside the click gesture, then sends `adopt-float` so an already-open panel reloads with the session.
 - History sent to the model is trimmed by `prepareHistory`: last 12 turns, 160,000 JSON characters, images only in the last two image turns, and tool calls for tools missing from the current page flattened to text.
 
 ### Discovery and execution
 
 - There is no polling. Discovery runs on tab activation, load completion, title change, panel visibility, before each message, and when a page's `document.modelContext` fires `toolchange`. The main-world bridge re-posts that event; an isolated-world relay forwards it with `chrome.runtime.sendMessage`.
-- Pages without a WebMCP API return `mode: "none"` with zero tools. Pages Chrome forbids (internal pages, Web Store) show "Can't access this page".
+- Pages without a WebMCP API, or whose `getTools()` throws, return `mode: "none"` with zero tools. Pages Chrome forbids (internal pages, Web Store) show the tab's title and `0 tools`; the tools list adds that Chrome doesn't allow reading them.
+
+### Skills
+
+- Stored as `skills` in `chrome.storage.local`: `{ id, name, description, instructions, auto }`. Built-ins are seeded only when the key is absent, so deleting them sticks. Panels sync through `storage.onChanged`.
+- A manual skill is sent as a `[Skill: name] … [End of skill]` block at the start of the user message; the transcript records `skill` for the bubble tag.
+- Auto skills are listed (name and description only) in the system context, and `load_skill` is added to the tools with an `enum` of their names. Page tools can't take that alias (`prepareTools(tools, reserved)`). `load_skill` runs locally, without a tool card or approval, and records a `skill` transcript entry.
 - Before each message, the bridge's `read` action returns `document.body.innerText`, capped at 24,000 characters, unless the user removed the page chip.
 - The preferred interface is `document.modelContext.getTools()` and `executeTool(tool, JSON.stringify(args), { signal })`.
 - A compatibility adapter for `navigator.modelContextTesting` exists but was not the primary acceptance path.
@@ -134,6 +145,7 @@ A user-supplied API key was used successfully for live verification. Its value i
 | Data                                            | Storage / behavior                                                          |
 | ----------------------------------------------- | --------------------------------------------------------------------------- |
 | Base URL, model, instructions, preference flags | `chrome.storage.local`, under `config`                                      |
+| Skills                                          | `chrome.storage.local`, under `skills`                                      |
 | API key, default mode                           | `chrome.storage.session`; survives panel recreation but not browser restart |
 | API key with Remember enabled                   | Local extension storage; not an OS-encrypted credential vault               |
 | Conversation (`chat:<windowId>`, `chat:float`)  | `chrome.storage.session`; cleared when Chrome closes                        |
@@ -187,6 +199,13 @@ node scripts/preview.mjs
 
 For an optional live run, set `WEBMCP_TEST_KEY` temporarily in the environment, run the E2E suite, then remove the variable. The live path currently targets the default DeepSeek endpoint and model.
 
+Verified for v0.5.0:
+
+- Eighteen unit tests passed, including the new skills tests.
+- The E2E suite passed with the v0.4 coverage plus skills: slash menu and keyboard selection, a manual skill reaching the model, `load_skill` called by the model, the welcome skill buttons, duplicate-name validation, and creating a skill in Settings. The model label is hidden once configured.
+- Pop-out through the service worker was checked with the scripted float test. Front-most focus in a real side panel needs a real browser session; the ordering is designed for it but was not observed in automation.
+- English and Chinese screenshots of the welcome skills, slash menu, skill chip, and skills settings were inspected.
+
 Verified for v0.4.0:
 
 - Thirteen unit tests passed (protocol, HTTPS rule, tool naming, history trimming, idle timeout, page read, no-tools discovery).
@@ -214,7 +233,7 @@ For a release:
 5. Package the extension folder, excluding credentials and development artifacts:
 
 ```powershell
-Compress-Archive -Path extension\* -DestinationPath dist/webmcp-agent-0.4.0.zip -Force
+Compress-Archive -Path extension\* -DestinationPath dist/webmcp-agent-0.5.0.zip -Force
 ```
 
 Use the new release version in the archive filename. `manifest.json` sits at the archive root, which the Chrome Web Store requires. For a manual install, extract it into a folder and load that folder, not the archive itself.
@@ -224,7 +243,9 @@ Use the new release version in the archive filename. `manifest.json` sits at the
 | Symptom                          | First checks                                                                                       |
 | -------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `0 tools` on a page with tools   | Inspect its native API, isolation header, WebMCP flag, and registration state; open the tools list |
-| "Can't access this page"         | Expected on Chrome internal pages and the Web Store; for file URLs enable file access              |
+| Tools list says it can't read    | Expected on Chrome internal pages and the Web Store; for file URLs enable file access              |
+| Float window goes behind         | Expected after clicking the browser window; it is a normal window, not always-on-top               |
+| Skill not used automatically     | Check its Auto flag and description; the model decides, and only models with tool calling can      |
 | Toolbar icon wrong for theme     | Check the offscreen document exists (`chrome.runtime.getContexts`) and the panel's `theme` message |
 | Built-in Gemini cannot see tools | Use this extension's side panel; it is a separate client with its own tool adapter                 |
 | Settings appear unchanged        | Save, then create a new session; reload the extension after source changes                         |
@@ -247,7 +268,8 @@ These are follow-up candidates, not claims that the current release implements t
 - History trimming is character-based, not token-based, and there is no summarization. Page text (24,000 characters) is sent on every message while the page chip is attached.
 - `chrome.storage.session` has a 10 MB quota shared by all windows. Images are downscaled and only recent ones kept, but many image-heavy sessions can still exceed it; the panel then shows a notice and the conversation lives only in memory.
 - Some providers may reject historical tool messages when the current request has no `tools`; flattening covers tools missing from the current page but was only verified against the mock.
-- `panel.js` concentrates UI and agent state; consider splitting it before large new features.
+- `panel.js` concentrates UI and agent state (now including the skills settings and slash menu); consider splitting it before large new features.
+- Skills hold instructions only. `SKILL.md` bundles with scripts or reference files import without them; skills are not synced across devices.
 - `panel.css` contains initial styling plus later redesign overrides. Consolidating those rules would reduce maintenance risk without changing appearance.
 - Host permissions are broad. Optional per-origin permissions and a production credential-proxy strategy would need a separate design decision.
 - The demo's internal/external distinction uses a shared in-page invocation flag. It is suitable for this sequential demonstration, not an authenticated provenance mechanism under concurrent calls.

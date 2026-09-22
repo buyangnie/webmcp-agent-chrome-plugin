@@ -45,7 +45,19 @@ export async function pageBridge(action, payload = {}) {
         window.postMessage({ webmcpAgent: "toolchange" }, "*"),
       );
     }
-    const list = api.getTools ? await api.getTools() : await api.listTools();
+    let list;
+    try {
+      list = api.getTools ? await api.getTools() : await api.listTools();
+    } catch (e) {
+      if (action !== "discover") throw e;
+      return {
+        ok: true,
+        title: document.title,
+        url: location.href,
+        mode: "none",
+        tools: [],
+      };
+    }
     const clean = (t) => ({
       name: t.name,
       description: t.description || "",

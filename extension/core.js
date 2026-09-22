@@ -35,8 +35,8 @@ export function requiresConfirmation(t) {
     t.annotations?.consequentialHint === true
   );
 }
-export function prepareTools(tools) {
-  const used = new Set();
+export function prepareTools(tools, reserved = []) {
+  const used = new Set(reserved);
   return tools.map((t) => {
     const base =
       String(t.name || "")

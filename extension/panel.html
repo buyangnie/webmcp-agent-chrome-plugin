@@ -57,26 +57,12 @@
         </svg>
         <h1 data-i18n="welcomeTitle">Ask about this page</h1>
         <p data-i18n="welcomeBody"></p>
-        <div class="suggestions">
-          <button data-i18n-prompt="promptSummarize">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 6h14M5 12h14M5 18h9" />
-            </svg>
-            <span data-i18n="suggestSummarize">Summarize this page</span>
-          </button>
-          <button data-i18n-prompt="promptCapabilities">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-5 5a1.4 1.4 0 0 0 2 2l5-5a4 4 0 0 0 5.4-5.4l-2.4 2.4-2-2z"
-              />
-            </svg>
-            <span data-i18n="suggestCapabilities">What can you do here?</span>
-          </button>
-        </div>
+        <div id="skillSuggestions" class="suggestions"></div>
       </section>
     </main>
     <footer>
       <div id="runStatus" role="status" hidden></div>
+      <div id="slashMenu" class="slash-menu" role="listbox" hidden></div>
       <div class="composer">
         <div id="attachments" class="attachments" hidden></div>
         <textarea
@@ -99,7 +85,13 @@
                 />
               </svg>
             </button>
-            <span id="modelLabel"></span>
+            <button
+              id="modelLabel"
+              type="button"
+              class="text-button"
+              data-i18n="connectModel"
+              hidden
+            ></button>
           </div>
           <button id="send" class="send" data-i18n-title="send">
             <svg class="glyph-send" viewBox="0 0 24 24" aria-hidden="true">
@@ -114,22 +106,40 @@
       <input id="fileInput" type="file" multiple hidden />
     </footer>
     <dialog id="settingsDialog" aria-labelledby="settingsTitle">
-      <form id="configForm">
-        <div class="dialog-head">
-          <div>
-            <h2 id="settingsTitle" data-i18n="settings">Settings</h2>
-            <p data-i18n="settingsSubtitle"></p>
-          </div>
-          <button
-            type="button"
-            class="icon close"
-            data-i18n-title="closeSettings"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m6 6 12 12M6 18 18 6" />
-            </svg>
-          </button>
+      <div class="dialog-head">
+        <div>
+          <h2 id="settingsTitle" data-i18n="settings">Settings</h2>
+          <p data-i18n="settingsSubtitle"></p>
         </div>
+        <button
+          type="button"
+          class="icon close"
+          data-i18n-title="closeSettings"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12M6 18 18 6" />
+          </svg>
+        </button>
+      </div>
+      <div class="tabs" role="tablist">
+        <button
+          id="tabModel"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="configForm"
+          data-i18n="tabModel"
+        ></button>
+        <button
+          id="tabSkills"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="paneSkills"
+          data-i18n="tabSkills"
+        ></button>
+      </div>
+      <form id="configForm" role="tabpanel">
         <section class="settings-section">
           <h3 data-i18n="modelConnection"></h3>
           <p class="section-description" data-i18n="modelConnectionHint"></p>
@@ -213,6 +223,79 @@
           ></button>
         </div>
       </form>
+      <section id="paneSkills" role="tabpanel" hidden>
+        <div id="skillList">
+          <p class="hint" data-i18n="skillsHint"></p>
+          <div id="skillItems" class="skill-items"></div>
+          <p id="skillNote" class="hint" role="status"></p>
+          <div class="dialog-actions">
+            <button
+              id="importSkill"
+              type="button"
+              class="secondary"
+              data-i18n="importSkill"
+            ></button>
+            <button
+              id="newSkill"
+              type="button"
+              class="primary"
+              data-i18n="newSkill"
+            ></button>
+          </div>
+          <input
+            id="skillFile"
+            type="file"
+            accept=".md,text/markdown,text/plain"
+            multiple
+            hidden
+          />
+        </div>
+        <div id="skillEditor" hidden>
+          <label for="skillName" data-i18n="skillName"></label>
+          <input id="skillName" spellcheck="false" maxlength="40" />
+          <label for="skillDescription" data-i18n="skillDescription"></label>
+          <input id="skillDescription" maxlength="200" />
+          <p class="hint" data-i18n="skillDescriptionHint"></p>
+          <label for="skillInstructions" data-i18n="skillInstructions"></label>
+          <textarea
+            id="skillInstructions"
+            rows="10"
+            maxlength="20000"
+            spellcheck="false"
+          ></textarea>
+          <label class="check">
+            <input id="skillAuto" type="checkbox" />
+            <span data-i18n="skillAuto"></span>
+          </label>
+          <p id="skillError" class="hint error" role="alert"></p>
+          <div class="dialog-actions">
+            <button
+              id="deleteSkill"
+              type="button"
+              class="text-button danger"
+              data-i18n="delete"
+            ></button>
+            <button
+              id="exportSkill"
+              type="button"
+              class="secondary"
+              data-i18n="export"
+            ></button>
+            <button
+              id="cancelSkill"
+              type="button"
+              class="secondary"
+              data-i18n="cancel"
+            ></button>
+            <button
+              id="saveSkill"
+              type="button"
+              class="primary"
+              data-i18n="save"
+            ></button>
+          </div>
+        </div>
+      </section>
     </dialog>
     <dialog id="toolsDialog" aria-labelledby="toolsTitle">
       <div class="dialog-head">

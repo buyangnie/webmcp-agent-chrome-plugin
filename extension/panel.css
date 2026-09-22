@@ -198,6 +198,200 @@ main {
 .suggestions svg {
   color: var(--muted);
 }
+.suggestions span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.suggestions strong {
+  font-weight: 600;
+}
+.suggestions small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.suggestions[hidden] {
+  display: none;
+}
+footer {
+  position: relative;
+}
+.slash-menu {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: calc(100% - 4px);
+  z-index: 5;
+  max-height: 280px;
+  overflow: auto;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  scrollbar-width: thin;
+}
+.slash-menu[hidden] {
+  display: none;
+}
+.slash-item,
+.slash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.slash-item span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+.slash-item[aria-selected="true"],
+.slash-item:hover {
+  background: var(--surface);
+}
+.slash-empty {
+  color: var(--muted);
+  font-size: 12px;
+}
+.slash-empty:disabled {
+  opacity: 1;
+}
+.chip.skill {
+  font-weight: 600;
+}
+.skill-tag {
+  align-self: flex-start;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+}
+.skill-used {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.skill-used svg {
+  width: 14px;
+  height: 14px;
+}
+.tabs {
+  display: flex;
+  gap: 16px;
+  margin: -4px 0 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tabs button {
+  margin-bottom: -1px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+.tabs button[aria-selected="true"] {
+  border-bottom-color: var(--text);
+  color: var(--text);
+}
+#configForm[hidden],
+#paneSkills[hidden],
+#skillList[hidden],
+#skillEditor[hidden] {
+  display: none;
+}
+.skill-items {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  text-align: left;
+}
+.skill-item:hover {
+  background: var(--surface);
+}
+.skill-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.skill-item-desc {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.badge {
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+}
+#skillInstructions {
+  width: 100%;
+  min-height: 180px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    12px/1.5 ui-monospace,
+    Consolas,
+    monospace;
+  resize: vertical;
+}
+#skillInstructions:focus {
+  outline: 2px solid var(--focus-line);
+  outline-offset: 1px;
+}
+.hint.error {
+  color: var(--danger);
+}
+.hint:empty {
+  display: none;
+}
+.text-button.danger {
+  margin-right: auto;
+  color: var(--danger);
+}
 footer {
   padding: 0 16px 12px;
   background: var(--bg);
@@ -311,13 +505,13 @@ footer {
 }
 #modelLabel {
   min-width: 0;
-  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--muted);
+  font-weight: 400;
+}
+#modelLabel[hidden] {
+  display: none;
 }
 .send {
   width: 32px;

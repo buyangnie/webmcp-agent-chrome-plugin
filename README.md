@@ -2,7 +2,7 @@
 
 A general-purpose Chrome assistant for the page you are on. It reads the page, accepts files and images, and uses the page's WebMCP tools when it has them, with a model you configure. It runs in the side panel or a floating window, in English or Simplified Chinese. This is an independent extension, not a Google product.
 
-Version 0.4 adds the floating window, conversations that survive closing the panel and navigating, a dark-grey Chrome-native look with a new icon, and a Chinese interface. See [PRIVACY.md](PRIVACY.md) and [STORE.md](STORE.md) for the privacy policy and Web Store listing.
+Version 0.5 adds skills: saved instructions you pick with `/` or that the model loads when they fit, managed in Settings and compatible with `SKILL.md` files. The floating window now opens in front, pages without tools show their real title, and the model name is no longer shown once configured. Version 0.4 added the floating window, conversations that survive closing the panel and navigating, a dark-grey Chrome-native look with a new icon, and a Chinese interface. See [PRIVACY.md](PRIVACY.md) and [STORE.md](STORE.md) for the privacy policy and Web Store listing.
 
 ## Install
 
@@ -38,7 +38,7 @@ The example prefers the native WebMCP API and falls back to a local implementati
 
 Run `npm ci`, `npm test`, then `npx playwright install chromium`. With the demo server running, run `npm run test:e2e`.
 
-Browser tests use a temporary independent Chrome for Testing profile. They exercise the extension page and real scripting APIs against native WebMCP, including tool discovery, page text, execution, confirmation/decline, stopping, new sessions, continuing after navigation, session restore, pages without tools, and sanitized Markdown. Controlled model responses make the main suite deterministic. Set the temporary `WEBMCP_TEST_KEY` environment variable for an additional real DeepSeek run; never commit credentials.
+Browser tests use a temporary independent Chrome for Testing profile. They exercise the extension page and real scripting APIs against native WebMCP, including tool discovery, page text, execution, confirmation/decline, stopping, new sessions, continuing after navigation, session restore, pages without tools, skills (slash menu, manual and automatic use, settings), and sanitized Markdown. Controlled model responses make the main suite deterministic. Set the temporary `WEBMCP_TEST_KEY` environment variable for an additional real DeepSeek run; never commit credentials.
 
 Run `npm run vendor` to update packaged runtime libraries. Run `node scripts/icons.mjs` to regenerate PNG icons using installed Chrome, or supply `CHROME_PATH`. No CDN or build server is required at runtime.
 

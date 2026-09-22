@@ -11,6 +11,7 @@ When you send a message, the extension sends the following to the model endpoint
 - your message and the earlier messages of the current conversation;
 - unless you remove the page chip, the current page's title, URL, and visible text;
 - files and images you attach;
+- the instructions of a skill you choose, and the names and descriptions of skills you allow the model to use automatically;
 - the names, descriptions, and input schemas of WebMCP tools the page provides, and the results of tools you allow the model to run.
 
 That endpoint is operated by the provider you chose (for example DeepSeek or OpenAI), and its own privacy policy governs what it does with the data.
@@ -19,7 +20,7 @@ The extension reads a page only when you open it on that page or send a message.
 
 ## What is stored, and where
 
-- **Settings** (endpoint, model name, instructions) are stored locally in Chrome's extension storage on your device.
+- **Settings** (endpoint, model name, instructions) and **skills** are stored locally in Chrome's extension storage on your device.
 - **API key**: kept in Chrome session storage by default and erased when Chrome closes. If you turn on "Remember key on this device", it is stored in local extension storage on your device.
 - **Conversations**: kept in Chrome session storage so they survive closing the panel, and erased when Chrome closes.
 
