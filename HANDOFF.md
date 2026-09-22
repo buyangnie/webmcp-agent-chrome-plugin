@@ -2,6 +2,7 @@
 
 Last updated: 2026-09-22  
 Current release: **0.2.0**  
+Repository: <https://github.com/buyangnie/webmcp-agent-chrome-plugin> (public, branch `main`)  
 Workspace: `D:\_Working_Space\04. GTS - MS\Code\itsm-WebMCP`
 
 ## 1. Current state
@@ -61,7 +62,7 @@ Treat observations about Google's client as historical, version-specific evidenc
 | `test-results/`                     | Generated English light/dark UI screenshots at 320, 440, and 650 pixels                                               |
 | `dist/`                             | Distributable extension archive                                                                                       |
 
-The workspace was not a Git repository during implementation. Do not assume an existing branch, commit, remote, or pull request.
+The workspace is now a Git repository: branch `main`, remote `origin` at <https://github.com/buyangnie/webmcp-agent-chrome-plugin>. The initial commit is the state this document describes.
 
 ## 5. Runtime architecture
 
@@ -225,6 +226,7 @@ These are follow-up candidates, not claims that the current release implements t
 - Host permissions are broad. Optional per-origin permissions and a production credential-proxy strategy would need a separate design decision.
 - The demo's internal/external distinction uses a shared in-page invocation flag. It is suitable for this sequential demonstration, not an authenticated provenance mechanism under concurrent calls.
 - The extension bridge reports an API shape, not cryptographic proof that a page is using a native implementation; consult the demo's explicit native/fallback indicator during testing.
-- There is no production backend, Chrome Web Store listing, enterprise distribution package, or Git-based release workflow in the current deliverable.
+- The end-to-end suite has been observed to time out once at its first run-status wait (1 of 3 consecutive runs on 2026-09-22). No deterministic cause was found; consider a single timeout retryable, but record it.
+- There is no production backend, Chrome Web Store listing, or enterprise distribution package. Releases are still assembled manually per section 9; the public repository only provides the Git history and remotes.
 
 Start by reading this document, `extension/README.md`, and the files relevant to the requested change. Preserve the general-purpose boundary between the extension and example, and validate new browser behavior in an isolated profile.
