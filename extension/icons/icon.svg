@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><title>WebMCP Agent</title><rect x="4" y="4" width="120" height="120" rx="32" fill="#f0f4f9"/><path d="M64 27a37 37 0 0 1 32 18.5" fill="none" stroke="#4285f4" stroke-width="12" stroke-linecap="round"/><path d="M96 45.5a37 37 0 0 1 0 37" fill="none" stroke="#34a853" stroke-width="12" stroke-linecap="round"/><path d="M96 82.5A37 37 0 0 1 32 82.5" fill="none" stroke="#fbbc04" stroke-width="12" stroke-linecap="round"/><path d="M32 82.5a37 37 0 0 1 0-37" fill="none" stroke="#ea4335" stroke-width="12" stroke-linecap="round"/><path d="M32 45.5A37 37 0 0 1 64 27" fill="none" stroke="#4285f4" stroke-width="12" stroke-linecap="round"/><path d="m56 53-11 11 11 11m16-22 11 11-11 11" fill="none" stroke="#174ea6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <title>WebMCP Agent</title>
+  <rect width="128" height="128" rx="28" fill="#1a73e8" />
+  <path
+    d="M48 36 30 64l18 28M80 36l18 28-18 28"
+    fill="none"
+    stroke="#fff"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

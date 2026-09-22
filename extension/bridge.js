@@ -1,6 +1,18 @@
 // Runs only in the selected document's MAIN world; no credentials are passed here.
+const PAGE_TEXT_LIMIT = 24000;
 export async function pageBridge(action, payload = {}) {
   try {
+    if (action === "read") {
+      const text = (document.body?.innerText || "")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+      const truncated = text.length > PAGE_TEXT_LIMIT;
+      return {
+        ok: true,
+        text: truncated ? text.slice(0, PAGE_TEXT_LIMIT) : text,
+        truncated,
+      };
+    }
     const cancellations = (window[Symbol.for("webmcp-agent.cancelled")] ??=
       new Set());
     if (action === "cancel") {
@@ -99,6 +111,19 @@ export async function pageBridge(action, payload = {}) {
   } catch (e) {
     return { ok: false, error: e.message || String(e) };
   }
+}
+export async function readPage(target) {
+  const [r] = await chrome.scripting.executeScript({
+    target: target.documentId
+      ? { tabId: target.tabId, documentIds: [target.documentId] }
+      : { tabId: target.tabId },
+    world: "MAIN",
+    func: pageBridge,
+    args: ["read"],
+  });
+  if (!r?.result?.ok)
+    throw Error(r?.result?.error || "Could not read the page");
+  return { text: r.result.text, truncated: r.result.truncated };
 }
 export async function discover(tabId) {
   const [r] = await chrome.scripting.executeScript({

@@ -8,84 +8,87 @@
   </head>
   <body>
     <header>
-      <div class="brand">
-        <img src="icons/icon.svg" alt="" /><span>WebMCP <b>Agent</b></span>
-      </div>
-      <div class="actions">
-        <button
-          id="newSession"
-          class="icon"
-          title="New session"
-          aria-label="New session"
-        >
-          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg></button
-        ><button
-          id="settings"
-          class="icon"
-          title="Settings"
-          aria-label="Settings"
-        >
-          <svg viewBox="0 0 24 24">
-            <path
-              d="m9 4 .5-2h5l.5 2 2 1 2-.5 2.5 4-1.5 1.5v3l1.5 1.5-2.5 4-2-.5-2 1-.5 2h-5L9 19l-2-1-2 .5-2.5-4L4 13v-3L2.5 8.5l2.5-4 2 .5z"
-            />
-            <circle cx="12" cy="11.5" r="3" />
-          </svg>
-        </button>
-      </div>
-    </header>
-    <section class="connection" aria-label="Connected page">
-      <div class="connection-top">
-        <span id="dot" class="dot"></span
-        ><strong id="pageTitle">Connecting to this tab…</strong
-        ><button
-          id="refresh"
-          class="icon"
-          title="Refresh tools"
-          aria-label="Refresh tools"
-        >
-          <svg viewBox="0 0 24 24">
-            <path d="M20 7v5h-5M20 12a8 8 0 1 0-2.5 5.8" />
-          </svg>
-        </button>
-      </div>
-      <div class="connection-bottom">
-        <span id="pageHost">Current tab</span
-        ><button id="toolsButton" class="pill">0 tools</button>
+      <div class="toolbar">
+        <div class="connection" aria-label="Connected page">
+          <span id="dot" class="dot"></span>
+          <strong id="pageTitle">Connecting to this tab…</strong>
+          <span id="pageHost" class="sr-only">Current tab</span>
+          <button id="toolsButton" class="pill" title="Available tools">
+            0 tools
+          </button>
+          <button
+            id="refresh"
+            class="icon"
+            title="Refresh tools"
+            aria-label="Refresh tools"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12a9 9 0 1 1-3-6.7" />
+              <path d="M21 3v6h-6" />
+            </svg>
+          </button>
+        </div>
+        <div class="actions">
+          <button
+            id="newSession"
+            class="icon"
+            title="New session"
+            aria-label="New session"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+          <button
+            id="settings"
+            class="icon"
+            title="Settings"
+            aria-label="Settings"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </div>
       </div>
       <p id="connectionError" hidden></p>
-    </section>
+    </header>
     <main id="messages" aria-label="Conversation">
       <section id="welcome">
-        <img class="hero-icon" src="icons/icon.svg" alt="" />
-        <h1>A little help.<br />A lot more done.</h1>
+        <h1>Ask about this page</h1>
         <p>
-          Talk to your page. Explore its tools.<br />Turn a request into a
-          completed task.
+          Explore its tools and turn a request into a completed task. One
+          session at a time. You approve changes before they run.
         </p>
         <div class="suggestions">
           <button
             data-prompt="What tools are available on this page, and what does each one do?"
           >
-            <svg viewBox="0 0 24 24"><path d="m9 5-6 7 6 7m6-14 6 7-6 7" /></svg
-            ><span>Explore page tools</span
-            ><span class="arrow">↗</span></button
-          ><button
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m8 8-4 4 4 4M16 8l4 4-4 4" />
+            </svg>
+            <span>Explore page tools</span>
+          </button>
+          <button
             data-prompt="Based on the available page tools, suggest useful tasks you can help me complete."
           >
-            <svg viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <path
-                d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4z"
-              /></svg
-            ><span>Help me get started</span><span class="arrow">↗</span>
+                d="m12 3 1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6z"
+              />
+            </svg>
+            <span>Help me get started</span>
           </button>
         </div>
-        <small>You're in control. Approve changes before they run.</small>
       </section>
     </main>
     <footer>
-      <div id="runStatus" role="status">Ready when you are</div>
+      <div id="runStatus" role="status" hidden></div>
       <div class="composer">
+        <div id="attachments" class="attachments" hidden></div>
         <textarea
           id="prompt"
           rows="2"
@@ -93,26 +96,45 @@
           aria-label="Message"
         ></textarea>
         <div class="composer-bottom">
-          <span id="modelLabel">Connect a model to get started</span
-          ><button id="send" class="send" title="Send" aria-label="Send">
-            ↑
+          <div class="composer-tools">
+            <button
+              id="addFile"
+              class="icon"
+              type="button"
+              title="Add files"
+              aria-label="Add files"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"
+                />
+              </svg>
+            </button>
+            <span id="modelLabel">Connect a model to get started</span>
+          </div>
+          <button id="send" class="send" title="Send" aria-label="Send">
+            <svg class="glyph-send" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+            <svg class="glyph-stop" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="7" y="7" width="10" height="10" rx="1.5" />
+            </svg>
           </button>
         </div>
       </div>
-      <div class="footnote">
-        One session at a time. Review important actions.
-      </div>
+      <input id="fileInput" type="file" multiple hidden />
     </footer>
     <dialog id="settingsDialog" aria-labelledby="settingsTitle">
       <form id="configForm">
         <div class="dialog-head">
           <div>
-            <div class="eyebrow">MAKE IT YOURS</div>
             <h2 id="settingsTitle">Settings</h2>
-            <p>Your model. Your instructions.</p>
+            <p>Your model and instructions.</p>
           </div>
           <button type="button" class="icon close" aria-label="Close settings">
-            <svg viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" /></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 6 12 12M6 18 18 6" />
+            </svg>
           </button>
         </div>
         <section class="settings-section">
@@ -120,14 +142,15 @@
           <p class="section-description">
             Connect any OpenAI-compatible Chat Completions endpoint.
           </p>
-          <label for="baseUrl">Base URL</label
-          ><input
+          <label for="baseUrl">Base URL</label>
+          <input
             id="baseUrl"
             type="url"
             required
             placeholder="https://api.deepseek.com"
             spellcheck="false"
-          /><label for="apiKey">API key</label>
+          />
+          <label for="apiKey">API key</label>
           <div class="key-row">
             <input
               id="apiKey"
@@ -136,16 +159,18 @@
               required
               placeholder="Enter your API key"
               spellcheck="false"
-            /><button id="showKey" type="button" class="secondary">Show</button>
+            />
+            <button id="showKey" type="button" class="secondary">Show</button>
           </div>
-          <label class="check"
-            ><input id="saveKey" type="checkbox" /><span
-              >Remember key on this device<small
-                >Otherwise, it stays in memory until Chrome closes.</small
-              ></span
-            ></label
-          ><label for="model">Model name</label
-          ><input
+          <label class="check">
+            <input id="saveKey" type="checkbox" />
+            <span>
+              Remember key on this device
+              <small>Otherwise, it stays in memory until Chrome closes.</small>
+            </span>
+          </label>
+          <label for="model">Model name</label>
+          <input
             id="model"
             required
             placeholder="deepseek-flash"
@@ -159,16 +184,17 @@
               Reset to default
             </button>
           </div>
-          <label class="sr-only" for="systemPrompt">System prompt</label
-          ><textarea id="systemPrompt" rows="6" spellcheck="false"></textarea>
+          <label class="sr-only" for="systemPrompt">System prompt</label>
+          <textarea id="systemPrompt" rows="6" spellcheck="false"></textarea>
           <p class="hint">
             Set the assistant's role and response style. Changes apply to a new
             session.
           </p>
         </section>
         <div class="privacy-note">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6zM9 12l2 2 4-4" />
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3 5 6v6c0 4.5 3.2 7.4 7 9 3.8-1.6 7-4.5 7-9V6z" />
+            <path d="m9 12 2 2 4-4" />
           </svg>
           <p>
             Conversations, page details, and tool results go to your model
@@ -178,20 +204,22 @@
         <div id="testResult" role="status"></div>
         <div class="dialog-actions">
           <button id="testConnection" type="button" class="secondary">
-            Test connection</button
-          ><button class="primary" type="submit">Save changes</button>
+            Test connection
+          </button>
+          <button class="primary" type="submit">Save changes</button>
         </div>
       </form>
     </dialog>
     <dialog id="toolsDialog" aria-labelledby="toolsTitle">
       <div class="dialog-head">
         <div>
-          <div class="eyebrow">CONNECTED TO YOUR PAGE</div>
           <h2 id="toolsTitle">Available tools</h2>
           <p id="toolsSubtitle"></p>
         </div>
         <button class="icon close" aria-label="Close tools">
-          <svg viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" /></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12M6 18 18 6" />
+          </svg>
         </button>
       </div>
       <div id="toolsList"></div>
