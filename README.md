@@ -4,6 +4,20 @@ A general-purpose Chrome assistant for the page you are on. It reads the page, a
 
 Version 0.7 draws Mermaid diagrams in answers, in the current theme, with enlarge, zoom, and SVG or PNG download. Version 0.6 added a WebMCP inspector (Settings → Developer): it diagnoses why a page has no tools, checks tool definitions, and calls tools directly without the model. Version 0.5 added skills: saved instructions you pick with `/` or that the model loads when they fit, managed in Settings and compatible with `SKILL.md` files. The floating window now opens in front, pages without tools show their real title, and the model name is no longer shown once configured. Version 0.4 added the floating window, conversations that survive closing the panel and navigating, a dark-grey Chrome-native look with a new icon, and a Chinese interface. See [PRIVACY.md](PRIVACY.md) and [STORE.md](STORE.md) for the privacy policy and Web Store listing.
 
+## Screenshots
+
+The WebMCP inspector next to the agent, with the Developer settings that turn it on:
+
+![WebMCP inspector diagnosing a page and listing its tools, next to the agent's Developer settings](images/cws-screenshot-01-inspector-and-agent.jpg)
+
+| Ask about the current page, or start from a skill                                                    | Manage skills                                                                                        |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| ![Welcome screen in the floating window with skill suggestions](images/cws-screenshot-02-skills.jpg) | ![Skills settings with built-in skills and import](images/cws-screenshot-04-ask-about-this-page.jpg) |
+
+Connect any OpenAI-compatible model and edit the instructions:
+
+![Model settings with endpoint, API key, model name, and instructions](images/cws-screenshot-03-model-settings.jpg)
+
 ## Install
 
 1. Open `chrome://extensions` and enable **Developer mode**.
