@@ -56,4 +56,4 @@ Browser tests use a temporary independent Chrome for Testing profile. They exerc
 
 Run `npm run vendor` to update packaged runtime libraries. Run `node scripts/icons.mjs` to regenerate PNG icons using installed Chrome, or supply `CHROME_PATH`. No CDN or build server is required at runtime.
 
-UI snapshots are written to `test-results/`. Release archives are in `dist/`.
+UI snapshots are written to `test-results/`. Release archives are published on [GitHub Releases](https://github.com/buyangnie/webmcp-agent-chrome-plugin/releases); build them into `dist/`, which is not tracked.
