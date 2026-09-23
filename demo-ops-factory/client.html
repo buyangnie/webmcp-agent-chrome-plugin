@@ -8,7 +8,7 @@
   </head>
   <body>
     <header>
-      <img src="extension/icons/icon.svg" alt="" />
+      <img src="../extension/icons/icon.svg" alt="" />
       <div>
         <p class="eyebrow">WEBMCP AGENT / EXAMPLE</p>
         <h1>External client verification</h1>
@@ -26,8 +26,8 @@
       </div>
       <div class="row">
         <button id="list">Discover tools</button
-        ><button id="callList">List incidents</button
-        ><button id="callDetail">Get incident details</button
+        ><button id="callList">Get incident overview</button
+        ><button id="callDetail">Get work logs</button
         ><button id="callBad" class="secondary">Test invalid arguments</button>
       </div>
       <pre id="out">Wait for the embedded page to finish loading.</pre>
@@ -65,11 +65,11 @@
         }
       }
       document.getElementById("callList").onclick = () =>
-        call("list_tickets", { status: "open" });
+        call("get_incident_overview", { ticketId: "INC-20260918-0007" });
       document.getElementById("callDetail").onclick = () =>
-        call("get_ticket_detail", { ticketId: "INC-2026-0431" });
+        call("get_work_logs", { ticketId: "INC-20260918-0007", limit: 3 });
       document.getElementById("callBad").onclick = () =>
-        call("get_ticket_detail", { ticketId: 42 });
+        call("get_incident_overview", { ticketId: 42 });
     </script>
   </body>
 </html>

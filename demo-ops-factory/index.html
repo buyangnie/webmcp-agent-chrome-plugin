@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>FO Copilot incidents · WebMCP demo</title>
+    <link rel="icon" href="../extension/icons/icon.svg" />
+    <link rel="stylesheet" href="demo.css" />
+    <script src="fo-tools.js" defer></script>
+    <script src="demo.js" defer></script>
+  </head>
+  <body>
+    <aside id="mcpBanner" role="status">
+      <strong id="mcpBannerTitle">No external tool calls in this session</strong
+      ><span id="mcpBannerDetail"
+        >Call a tool from a WebMCP client to see its receipt here.</span
+      ><b id="mcpBannerToken"></b>
+    </aside>
+    <header>
+      <img src="../extension/icons/icon.svg" alt="" />
+      <div>
+        <p class="eyebrow">WEBMCP AGENT / FO COPILOT</p>
+        <h1>FO Copilot incident workspace</h1>
+        <p>
+          Live GDE incidents and Gateway scripts, exposed to agents as WebMCP
+          tools through the local serve.py proxy.
+        </p>
+      </div>
+    </header>
+    <div id="env" class="environment"></div>
+    <div class="layout">
+      <section>
+        <div class="section-title">
+          <h2>Incidents</h2>
+          <span id="boardStat"></span>
+        </div>
+        <div class="info">
+          <strong>Verify a real tool call</strong>
+          <p>
+            GDE has no incident list, so load incidents by ID. External calls
+            update the banner, counter, and receipt; compare the receipt with
+            the client's response. Write tools need approval in the agent and
+            <code>serve.py --allow-write</code> on the server.
+          </p>
+        </div>
+        <form id="ticketForm" class="row panel">
+          <input
+            id="ticketInput"
+            aria-label="Incident ID"
+            value="INC-20260918-0007"
+            placeholder="INC-20260918-0007"
+          /><button>Load incident</button>
+        </form>
+        <div id="board"></div>
+        <section class="panel">
+          <h2>Registered tools</h2>
+          <div id="registry"></div>
+        </section>
+      </section>
+      <section>
+        <section class="panel">
+          <h2>Manual tool call</h2>
+          <label for="toolSel">Tool</label
+          ><select id="toolSel"></select
+          ><label for="argsBox">Arguments (JSON)</label
+          ><textarea id="argsBox" rows="8"></textarea>
+          <div class="row">
+            <button id="callRun">Execute</button
+            ><button id="fillExample" class="secondary">Use example</button
+            ><button id="abortBtn" class="secondary">Stop</button>
+          </div>
+          <pre id="callOut">No calls yet.</pre>
+        </section>
+        <section class="panel">
+          <h2>Tool discovery</h2>
+          <p class="hint">The definitions returned by getTools().</p>
+          <pre id="toolsJson"></pre>
+        </section>
+        <section class="panel">
+          <h2>Call log</h2>
+          <div id="log">No calls yet.</div>
+        </section>
+      </section>
+    </div>
+  </body>
+</html>

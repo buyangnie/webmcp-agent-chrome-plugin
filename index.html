@@ -3,93 +3,49 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>ITSM incidents · WebMCP demo</title>
+    <title>WebMCP Agent demos</title>
     <link rel="icon" href="extension/icons/icon.svg" />
-    <link rel="stylesheet" href="demo.css" />
-    <script src="demo.js" defer></script>
+    <link rel="stylesheet" href="demo-ops-factory/demo.css" />
+    <style>
+      a.ticket {
+        color: inherit;
+        text-decoration: none;
+        display: block;
+      }
+      a.ticket:hover {
+        border-color: var(--accent);
+      }
+    </style>
   </head>
   <body>
-    <aside id="mcpBanner" role="status">
-      <strong id="mcpBannerTitle">No external tool calls in this session</strong
-      ><span id="mcpBannerDetail"
-        >Call a tool from a WebMCP client to see its receipt here.</span
-      ><b id="mcpBannerToken"></b>
-    </aside>
     <header>
       <img src="extension/icons/icon.svg" alt="" />
       <div>
-        <p class="eyebrow">WEBMCP AGENT / EXAMPLE</p>
-        <h1>ITSM incident workspace</h1>
+        <p class="eyebrow">WEBMCP AGENT</p>
+        <h1>Demos</h1>
         <p>
-          Three sample incidents. Three tools. A shared workspace for people and
-          agents.
+          Two pages that register tools for the extension. Neither is part of
+          the extension.
         </p>
       </div>
     </header>
-    <div id="env" class="environment"></div>
-    <div class="layout">
-      <section>
-        <div class="section-title">
-          <h2>Incident board</h2>
-          <span id="boardStat"></span>
-        </div>
-        <div class="info">
-          <strong>Verify a real tool call</strong>
-          <p>
-            External calls update the banner, counter, and receipt. Compare the
-            receipt with the client's response. Internal guidance is returned
-            only by <code>get_ticket_detail</code>. A missing receipt alone does
-            not tell you how an agent obtained its answer.
-          </p>
-        </div>
-        <div id="board"></div>
-        <section class="panel">
-          <h2>Registered tools</h2>
-          <div id="registry"></div>
-        </section>
-      </section>
-      <section>
-        <section class="panel">
-          <div class="section-title">
-            <h2>Local agent simulator</h2>
-            <span>Keyword routing, not an LLM</span>
-          </div>
-          <p class="hint">
-            Use the browser side panel for a real model-driven conversation.
-          </p>
-          <div class="row">
-            <input
-              id="agentInput"
-              aria-label="Demo request"
-              value="List open incidents"
-              placeholder="List open incidents"
-            /><button id="agentRun">Send</button>
-          </div>
-          <pre id="agentOut">Ready for a request.</pre>
-        </section>
-        <section class="panel">
-          <h2>Manual tool call</h2>
-          <label for="toolSel">Tool</label
-          ><select id="toolSel"></select
-          ><label for="argsBox">Arguments (JSON)</label
-          ><textarea id="argsBox" rows="6"></textarea>
-          <div class="row">
-            <button id="callRun">Execute</button
-            ><button id="fillExample" class="secondary">Use example</button
-            ><button id="abortBtn" class="secondary">Stop</button>
-          </div>
-          <pre id="callOut">No calls yet.</pre>
-        </section>
-        <section class="panel">
-          <h2>Tool discovery</h2>
-          <p class="hint">The definitions returned by getTools().</p>
-          <pre id="toolsJson"></pre>
-        </section>
-        <section class="panel">
-          <h2>Call log</h2>
-          <div id="log">No calls yet.</div>
-        </section>
-      </section>
-    </div>
+    <main class="layout">
+      <a class="ticket" href="demo-ops-factory/">
+        <p class="eyebrow">LIVE GDE AND GATEWAY</p>
+        <h3>Ops Factory</h3>
+        <p>
+          FO Copilot incident tools. <code>serve.py</code> proxies the calls and
+          keeps the credentials.
+        </p>
+      </a>
+      <a class="ticket" href="demo-datadog/">
+        <p class="eyebrow">SIMULATED</p>
+        <h3>Datadog MCP</h3>
+        <p>
+          Logs, traces, metrics, monitors, hosts, incidents, and dashboards from
+          local sample data.
+        </p>
+      </a>
+    </main>
   </body>
 </html>

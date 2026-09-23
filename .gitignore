@@ -3,3 +3,4 @@ test-results/
 dist/
 *.local.json
 *.local.env
+http-api-protocol*.md

@@ -20,14 +20,45 @@ const context = await chromium.launchPersistentContext(profile, {
   ],
   viewport: { width: 440, height: 900 },
 });
+const TICKET = "INC-20260918-0007";
+const TOOL_COUNT = "17 tools";
+const API = {
+  status: { gde: true, gateway: true, allowWrite: true },
+  queryIncidentDetail: {
+    code: "0",
+    data: {
+      baseInfo: {
+        title: "Mock filesystem usage high",
+        priority: "P3",
+        current_phase: "Auto45",
+        des_rl: "Mock alarm text",
+      },
+      currentInfo: { om_clc: "" },
+    },
+  },
+  queryCurrentOperator: { code: "0", data: "user:FOCopilot" },
+  queryIncidentPriority: { code: "0", data: "P3" },
+  queryIncidentAlarmDetail: {
+    alarmName: "High file system usage",
+    alarmSeverity: "Critical",
+    alarmNeName: "MOCKVM",
+    alarmCsn: "1",
+  },
+};
+// The demo proxies to live GDE/Gateway; keep the extension suite hermetic.
+await context.route("http://127.0.0.1:8124/api/**", (route) => {
+  const op = new URL(route.request().url()).pathname.slice("/api/".length);
+  route.fulfill({ json: API[op] ?? { code: "0", data: [] } });
+});
 try {
   const sw =
     context.serviceWorkers()[0] ||
     (await context.waitForEvent("serviceworker"));
   const id = new URL(sw.url()).host;
   const demo = await context.newPage();
-  await demo.goto("http://127.0.0.1:8124/");
+  await demo.goto("http://127.0.0.1:8124/demo-ops-factory/");
   await demo.waitForFunction(() => window.__webmcpDemo);
+  await demo.locator(".ticket h3", { hasText: "Mock filesystem" }).waitFor();
   console.log(
     "Demo mode:",
     await demo.evaluate(() => window.__webmcpDemo.mode),
@@ -38,7 +69,7 @@ try {
   panel.on("pageerror", (e) => errors.push(e.message));
   const demoId = await sw.evaluate(async () => {
     const tabs = await chrome.tabs.query({});
-    return tabs.find((t) => t.url?.startsWith("http://127.0.0.1:8124/")).id;
+    return tabs.find((t) => t.url?.includes("/demo-ops-factory/")).id;
   });
   const toolCount = async (text) => {
     await panel.locator("#toolsButton").click();
@@ -49,7 +80,7 @@ try {
     await panel.keyboard.press("Escape");
   };
   await sw.evaluate((id) => chrome.tabs.update(id, { active: true }), demoId);
-  await toolCount("3 tools");
+  await toolCount(TOOL_COUNT);
   assert.equal(await panel.locator("#dot.tools").count(), 1);
   await panel.locator("#settings").click();
   await panel.locator("#apiKey").fill("test-key");
@@ -108,8 +139,8 @@ try {
         };
       } else {
         const name = last.content.includes("Update")
-          ? "update_ticket_status"
-          : "get_ticket_detail";
+          ? "add_comment"
+          : "get_incident_overview";
         const t = body.tools.find((t) =>
           t.function.description.startsWith(name),
         );
@@ -122,12 +153,11 @@ try {
               function: {
                 name: t.function.name,
                 arguments: JSON.stringify(
-                  name === "get_ticket_detail"
-                    ? { ticketId: "INC-2026-0431" }
+                  name === "get_incident_overview"
+                    ? { ticketId: TICKET }
                     : {
-                        ticketId: "INC-2026-0431",
-                        status: "in_progress",
-                        note: "Extension end-to-end test",
+                        ticketId: TICKET,
+                        description: "Extension end-to-end test",
                       },
                 ),
               },
@@ -156,7 +186,7 @@ try {
   assert.equal(await panel.locator(".body img").count(), 0);
   assert.ok(
     (await demo.locator("#mcpBanner").innerText()).includes(
-      "get_ticket_detail",
+      "get_incident_overview",
     ),
   );
   await panel.locator("#prompt").fill("Update ticket status");
@@ -178,7 +208,7 @@ try {
   );
   assert.ok(
     (await demo.locator("#mcpBanner").innerText()).includes(
-      "get_ticket_detail",
+      "get_incident_overview",
     ),
   );
   await panel.locator("#prompt").fill("Update ticket status");
@@ -189,7 +219,7 @@ try {
   );
   assert.ok(
     (await demo.locator("#mcpBanner").innerText()).includes(
-      "update_ticket_status",
+      "add_comment (returned)",
     ),
   );
   await panel.locator("#newSession").click();
@@ -208,7 +238,7 @@ try {
   );
   await demo.reload();
   await demo.waitForFunction(() => window.__webmcpDemo);
-  await toolCount("3 tools");
+  await toolCount(TOOL_COUNT);
   await panel.locator(".divider").waitFor();
   await panel.locator("#prompt").fill("Get ticket details");
   await panel.locator("#send").click();
@@ -315,14 +345,14 @@ try {
   await panel.locator("#inspectorEnabled").check();
   await panel.keyboard.press("Escape");
   await sw.evaluate((id) => chrome.tabs.update(id, { active: true }), demoId);
-  await toolCount("3 tools");
+  await toolCount(TOOL_COUNT);
   await panel.locator("#toolsButton").click();
   const opened = context.waitForEvent("page");
   await panel.locator("#inspect").click();
   const inspector = await opened;
   inspector.on("pageerror", (e) => errors.push("inspector: " + e.message));
   await inspector.locator(".inspect-tool").nth(2).waitFor();
-  assert.equal(await inspector.locator(".inspect-tool").count(), 3);
+  assert.equal(await inspector.locator(".inspect-tool").count(), 17);
   assert.equal(await inspector.locator(".checks .level-error").count(), 0);
   assert.match(
     await inspector.locator(".checks").innerText(),
@@ -330,30 +360,32 @@ try {
   );
   assert.match(
     await inspector
-      .locator(".inspect-tool", { hasText: "update_ticket_status" })
+      .locator(".inspect-tool", { hasText: "add_comment" })
       .innerText(),
     /Needs approval/,
   );
-  await inspector.locator("#callTool").selectOption("get_ticket_detail");
+  await inspector.locator("#callTool").selectOption("get_incident_overview");
   await inspector.locator("#callArgs").fill("{}");
   await inspector.locator("#callButton").click();
   assert.match(
     await inspector.locator("#callNotes").innerText(),
     /don't match/,
   );
-  await inspector.locator("#callArgs").fill('{"ticketId":"INC-2026-0431"}');
+  await inspector
+    .locator("#callArgs")
+    .fill(JSON.stringify({ ticketId: TICKET }));
   await inspector.locator("#callButton").click();
   await inspector.waitForFunction(() =>
     document.getElementById("callStatus").textContent.startsWith("Succeeded"),
   );
   assert.match(
     await inspector.locator("#callResult").innerText(),
-    /INC-2026-0431/,
+    new RegExp(TICKET),
   );
-  await inspector.locator("#callTool").selectOption("update_ticket_status");
+  await inspector.locator("#callTool").selectOption("add_comment");
   await inspector
     .locator("#callArgs")
-    .fill('{"ticketId":"INC-2026-0431","status":"resolved"}');
+    .fill(JSON.stringify({ ticketId: TICKET, description: "x" }));
   await inspector.locator("#callButton").click();
   assert.match(
     await inspector.locator("#callNotes").innerText(),
@@ -369,7 +401,7 @@ try {
   assert.ok(await inspector.locator("#toolsSection").isHidden());
   assert.match(
     await inspector.locator("#events").innerText(),
-    /Called get_ticket_detail: succeeded/,
+    /Called get_incident_overview: succeeded/,
   );
 
   assert.deepEqual(errors, []);
@@ -398,7 +430,7 @@ try {
     await panel
       .locator("#prompt")
       .fill(
-        "Use the tools to retrieve INC-2026-0431, including internal guidance and the complete MCP call receipt.",
+        `Use the tools to get an overview of ${TICKET}, including the complete MCP call receipt.`,
       );
     await panel.locator("#send").click();
     await panel.waitForFunction(
@@ -415,7 +447,7 @@ try {
     assert.equal(await panel.locator("#runStatus").innerText(), "Completed");
     assert.ok((await panel.locator(".tool-card.done").count()) > 0);
     const proof = await demo.locator("#mcpBanner").innerText();
-    assert.ok(proof.includes("get_ticket_detail"));
+    assert.ok(proof.includes("get_incident_overview"));
     await panel
       .locator(".tool-card")
       .first()
